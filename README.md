@@ -46,6 +46,12 @@ Admin Commands:
 ------------------------------------------------------------------------------------------------
 Default timeou: 120 Seconds
 
+Youtube Videos
+
+Latest Version 1.5.0 : https://www.youtube.com/watch?v=hZOCwUuEWI4&feature=youtu.be
+Older Version 1.0.5  : https://www.youtube.com/watch?v=MMSw9US8xn4
+Initial Version 1.0  : https://www.youtube.com/watch?v=ItNnbLQeszE
+
 How to setup and Play?
 ------------------------------------------------------------------------------------------------
 
