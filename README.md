@@ -72,8 +72,7 @@ PlugIn:
 World Map: 
 
 
-STATUS | KNOW ISSUES
-=====================
+KNOW ISSUES
 - none--
 
 Installation: 
