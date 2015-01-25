@@ -1,0 +1,14 @@
+name: mcg76_Spleef
+version: 1.5.0
+api: 1.8.0
+main: mcg76\game\spleef\SpleefPlugIn
+author: minecraftgenius76
+description: minecraftgenius76 Minigame Spleef 
+commands:
+ spleef:
+  description: "Start minecraftgenius76 Minigame Spleef"
+  permission: mcg76.spleef.command
+permissions:
+ mcg76.spleef.command:
+  description: "mcg76.spleef"
+  default: true

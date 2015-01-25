@@ -1,0 +1,67 @@
+# -----------------------------------------------------------
+# MinecraftGenius76 
+# Mini-Games - SPLEEF
+# Youtube: http://www.youtube.com/user/minecraftgenius76
+# language file
+# Contributor(s): mcg76
+# -----------------------------------------------------------
+languageCode: "CN1"
+languageName: "CHINESE"
+languageDescription: "CHINESE SIMPLIFY"
+version: "1.50"
+# -----------------------------------------------------------
+spleef:
+ name: "SPLEEF"
+ welcome: "欢迎Speef竞技场"
+ havefun: "玩得开心!"
+ setup:
+   action: "Setup Mode Action: " 
+   select: "[Select a Block to SET that location]" 
+   success: "setup success!"
+   failed: "setup failed!"
+ command:
+  create: 
+    success: "Spleef Arena Created!"
+  reset: 
+    success: "Spleef Arena Reseted!"   
+  blockon: 
+    success: "Block Display ON!"       
+  blockoff: 
+    success: "Block Display OFF!"          
+  error:
+   no-authorization: "You are not authorized to use this command!"
+   in-game-only: "This command is in-game-only."
+ hits:
+   toplay: "Hit Start button to play"
+ game:
+   started: "Game Started!" 
+   stats: "Spleef Arena Stats"
+   players: "Players :"   
+   reset-in: "Reset In "
+   gogogo: "Go, Go, Go!!!!" 
+   conglatulation: "CONGLATULATION"
+   round-winner: "This Round Winner(s):"
+   wait-for-reset: "game round still on. Please wait."
+   manual-reset: "or manual reset using admin command"
+teleporting:
+ lobby:
+  world: "teleporting to lobby world"
+  location: "teleporting to lobby location"  
+ spleef:
+  location: "teleport to SPEEF home world" 
+configuration:
+ error: 
+  missing:
+    arena-entrace: "Missing Spleef Arena Entrance Configuration info!"
+    level-not-found: "level not found: "    
+  level-not-generated: "Error has NOT generated yet!"
+ contact:
+   admin: "Please report to administrator."
+plugin:
+ name: "[SPLEEF]"
+ enable: "Spleef Mini-Game - ENABLED"
+ disable: "Spleef Mini-Game - DISABLED "
+ schedule:
+  reset: "Reset schedule task to run every "
+  time: " seconds "
+
