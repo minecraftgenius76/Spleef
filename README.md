@@ -80,7 +80,11 @@ KNOW ISSUES
 
 Installation: 
 -------------------------
-Just drop mcg76_Spleef_v1.0.0.phar into PocketMine Server plugin folder 
+NOTE: 
+Upgrade from previous version, please remove old configuration file, 
+or copy your setting over to new configuration file
+-------------------------
+Just drop mcg76_Spleef_v1.5.phar into PocketMine Server plugin folder 
 Restart server
 
 Configuration: (config.xml)
