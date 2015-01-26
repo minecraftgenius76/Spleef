@@ -3,6 +3,7 @@
 namespace mcg76\game\spleef;
 
 use pocketmine\utils\Config;
+
 /**
  * MCG76 Spleef Messages
  *
@@ -10,7 +11,7 @@ use pocketmine\utils\Config;
  *
  * @author MCG76
  * @link http://www.youtube.com/user/minecraftgenius76
- *        
+ *      
  */
 class SpleefMessages extends MiniGameBase {
 	private $messages;
@@ -38,7 +39,7 @@ class SpleefMessages extends MiniGameBase {
 		return $this->messages->get ( "version" );
 	}
 	private function parseMessages(array $messages) {
-		$result = [];
+		$result = [ ];
 		foreach ( $messages as $key => $value ) {
 			if (is_array ( $value )) {
 				foreach ( $this->parseMessages ( $value ) as $k => $v ) {
@@ -51,26 +52,37 @@ class SpleefMessages extends MiniGameBase {
 		return $result;
 	}
 	
+	/**
+	 * Load Languages
+	 */
 	public function loadLanguageMessages() {
-		$configlang = $this->getSetup()->getMessageLanguage();
+		if (! file_exists ( $this->getPlugin ()->getDataFolder () )) {
+			@mkdir ( $this->getDataFolder (), 0777, true );
+			file_put_contents ( $this->getDataFolder () . "config.yml", $this->getResource ( "config.yml" ) );
+		}
+		$this->getPlugin ()->saveDefaultConfig ();
+		//retrieve language setting
+		$configlang = $this->getSetup ()->getMessageLanguage ();
 		$messageFile = $this->getPlugin ()->getDataFolder () . "messages_" . $configlang . ".yml";
-		$this->getPlugin ()->getLogger ()->info ( "SPLEEF Message Language = " . $messageFile );
+		$this->getPlugin ()->getLogger ()->info ( "SPLEEF Message Language = " . $messageFile );		
 		if (! file_exists ( $messageFile )) {
-			$this->getPlugin ()->saveResource ( "messages_EN.yml", false );
-			$messages = (new Config ( "messages_EN.yml" ))->getAll ();
+			$this->getPlugin ()->getLogger ()->info ( "Game Messages Default to EN" );
+			file_put_contents ( $this->getPlugin ()->getDataFolder () . "messages_EN.yml", $this->getPlugin ()->getResource ( "messages_EN.yml" ) );
+			$msgConfig = new Config ( $this->getPlugin ()->getDataFolder () . "messages_EN.yml" );
+			$messages = $msgConfig->getAll ();
 			$this->messages = $this->parseMessages ( $messages );
-			$this->getPlugin ()->getLogger ()->info ( "Warning!, specify configuration language not found!, fall back to use English" );
+			//$this->getPlugin ()->getLogger ()->info ( "Warning!, specify configuration language not found!, fall back to use English" );
 		} else {
-			$this->getPlugin ()->saveResource ( "messages_" . $configlang . ".yml", false );
+			$this->getPlugin ()->getLogger ()->info ( "use existing" );
 			$messages = (new Config ( $messageFile ))->getAll ();
 			$this->messages = $this->parseMessages ( $messages );
-		}
+		}		
 	}
+	
 	public function reloadMessages() {
 		$this->messages->reload ();
 	}
-	
 	public static function prefixMsg(&$msg) {
-		return "[SPLEEF]".	$msg;	
+		return "[SPLEEF]" . $msg;
 	}
 }

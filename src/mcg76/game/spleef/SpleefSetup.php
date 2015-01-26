@@ -44,7 +44,8 @@ class SpleefSetup extends MiniGameBase {
 	/**
 	 * Constructor
 	 *
-	 * @param SPLEEF PlugIn $plugin        	
+	 * @param
+	 *        	SPLEEF PlugIn $plugin
 	 */
 	public function __construct(SpleefPlugIn $plugin) {
 		parent::__construct ( $plugin );
@@ -321,15 +322,15 @@ class SpleefSetup extends MiniGameBase {
 	/**
 	 * Handle Click Sign Setup Actions
 	 *
-	 * @param Player $player
-	 * @param unknown $setupAction
-	 * @param Position $pos
+	 * @param Player $player        	
+	 * @param unknown $setupAction        	
+	 * @param Position $pos        	
 	 */
 	public function handleSetupPosition(Player $player, $setupAction, Position $pos) {
 		// handle setup selection
 		if ($setupAction == SpleefController::SPLEEF_COMMAND_SETUP_POSITION_SPLEEF_HOME) {
 			$this->getPlugIn ()->setupModeAction = "";
-			if ($this->setSpeefHomeLocation($pos)) {
+			if ($this->setSpeefHomeLocation ( $pos )) {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.success" ) . "\n" . round ( $pos->x ) . " " . round ( $pos->y ) . " " . round ( $pos->z ) );
 			} else {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.failed" ) . "\n" );
@@ -337,7 +338,7 @@ class SpleefSetup extends MiniGameBase {
 			return;
 		} elseif ($setupAction == SpleefController::SPLEEF_COMMAND_SETUP_POSITION_SERVER_LOBBY) {
 			$this->getPlugIn ()->setupModeAction = "";
-			if ($this->setServerLobbyLocation($pos)) {
+			if ($this->setServerLobbyLocation ( $pos )) {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.success" ) . "\n" . round ( $pos->x ) . " " . round ( $pos->y ) . " " . round ( $pos->z ) );
 			} else {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.failed" ) . "\n" );
@@ -345,7 +346,7 @@ class SpleefSetup extends MiniGameBase {
 			return;
 		} elseif ($setupAction == SpleefController::SPLEEF_COMMAND_SETUP_POSITION_ARENA_ENTRANCE) {
 			$this->getPlugIn ()->setupModeAction = "";
-			if ($this->setArenaEntrancePos($pos)) {
+			if ($this->setArenaEntrancePos ( $pos )) {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.success" ) . "\n" . round ( $pos->x ) . " " . round ( $pos->y ) . " " . round ( $pos->z ) );
 			} else {
 				$player->sendMessage ( $this->getMsg ( "spleef.setup.failed" ) . "\n" );
@@ -434,8 +435,8 @@ class SpleefSetup extends MiniGameBase {
 	
 	/**
 	 * setup player entrance position to arena
-	 * 
-	 * @param Position $pos
+	 *
+	 * @param Position $pos        	
 	 * @return boolean
 	 */
 	public function setArenaEntrancePos(Position $pos) {
@@ -452,7 +453,7 @@ class SpleefSetup extends MiniGameBase {
 		}
 		return $success;
 	}
-		
+	
 	/**
 	 * Setup Sign for Go to Spleef Home
 	 *
@@ -605,6 +606,58 @@ class SpleefSetup extends MiniGameBase {
 		}
 		return $success;
 	}
+	public static function getPlugInConfigFile(SpleefPlugIn $plugin) {
+		$path = $plugin->getDataFolder ();
+		if (! file_exists ( $path )) {
+			@mkdir ( $plugin->getDataFolder (), 0777, true );
+		}
+		return new Config ( $path . "config.yml", Config::YAML, array (
+				"language" => "EN",
+				"run_selftest_message" => "NO",
+				"enable_spaw_lobby" => "NO",
+				"server_lobby_world" => "world",
+				"server_lobby_x" => "489",
+				"server_lobby_y" => "5",
+				"server_lobby_z" => "388",
+				"enable_self_reset" => "YES",
+				"reset_timeout" => "120",
+				"reset_option" => "FLOOR",
+				"spleef_home_world" => "world",
+				"spleef_home_x " => "502",
+				"spleef_home_y " => "4",
+				"spleef_home_z" => "412",
+				"spleef_arena_name" => "Spleef Self-Generate Arena",
+				"spleef_arena_size" => "16",
+				"spleef_arena_x" => "535",
+				"spleef_arena_y" => "4",
+				"spleef_arena_z" => "409",
+				"spleef_arena_entrance_x" => "542",
+				"spleef_arena_entrance_y" => "22",
+				"spleef_arena_entrance_z" => "430",
+				"spleef_join_button_1_x" => "522",
+				"spleef_join_button_1_y" => "5",
+				"spleef_join_button_1_z" => "418",
+				"spleef_start_button_1_x" => "537",
+				"spleef_start_button_1_y" => "22",
+				"spleef_start_button_1_z" => "408",
+				"spleef_sign_lobby_x" => "487",
+				"spleef_sign_lobby_y" => "5",
+				"spleef_sign_lobby_z" => "387",
+				"spleef_sign_home_x" => "487",
+				"spleef_sign_home_y" => "5",
+				"spleef_sign_home_z" => "388",
+				"spleef_sign_join_x" => "496",
+				"spleef_sign_join_y" => "5",
+				"spleef_sign_join_z" => "412",
+				"spleef_sign_start_x" => "487",
+				"spleef_sign_start_y" => "5",
+				"spleef_sign_start_z" => "386",
+				"spleef_sign_stats_x" => "496",
+				"spleef_sign_stats_y" => "5",
+				"spleef_sign_stats_z" => "411" 
+		) );
+	}
+	
 	private function getConfig($key) {
 		return $this->getPlugin ()->getConfig ()->get ( $key );
 	}

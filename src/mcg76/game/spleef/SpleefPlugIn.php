@@ -26,24 +26,24 @@ use mcg76\game\spleef\tasks\PlayResetTimeout;
  * @author MCG76
  *        
  */
-class SpleefPlugin extends PluginBase implements CommandExecutor {	
+class SpleefPlugin extends PluginBase implements CommandExecutor {
 	// object variables
 	public $builder;
 	public $controller;
 	public $messages;
 	public $setup;
 	public $gamekit;
-	//session variables
+	// session variables
 	public $arenaPlayers = [ ];
-	public $arenablocks = [ ];	
-	//tracking variables	
+	public $arenablocks = [ ];
+	// tracking variables
 	public $gameMode = 0;
 	public $alertTimeOut = 0;
 	public $alertCount = 0;
 	public $gameType = 0;
 	public $pos_display_flag = 0;
 	
-	//setup mode
+	// setup mode
 	public $setupModeAction = "";
 	
 	/**
@@ -53,11 +53,7 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	 * @see \pocketmine\plugin\PluginBase::onLoad()
 	 */
 	public function onLoad() {
-		$this->setup = new SpleefSetup ( $this );
-		$this->messages = new SpleefMessages ( $this );
-		$this->builder = new SpleefArenaBuilder ( $this );
-		$this->controller = new SpleefController ( $this );
-		$this->gamekit = new SpleefGameKit($this);
+		$this->initMinigameComponents();
 	}
 	
 	/**
@@ -68,34 +64,16 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	 * @see \pocketmine\plugin\PluginBase::onEnable()
 	 */
 	public function onEnable() {
-		$time_start = microtime ( true );
-		if (! file_exists ( $this->getDataFolder () . "config.yml" )) {
-			@mkdir ( $this->getDataFolder (), 0777, true );
-			file_put_contents ( $this->getDataFolder () . "config.yml", $this->getResource ( "config.yml" ) );
-		}
-		$this->getConfig ()->getAll ();
-		$this->enabled = true;
+		$this->initConfigFile ();
+		//register listener
 		$this->getServer ()->getPluginManager ()->registerEvents ( new SpleefListener ( $this ), $this );
-		$this->getLogger()->info ( TextFormat::GREEN . $this->getMsg ( "plugin.enable" ) );
-		// schedule reset task
-		$this->getLogger()->info( TextFormat::GREEN . "-------------------------------------------------" );
-		// run reset scheduler
-		$resetValue = $this->setup->getRoundResetTime ();
-		$resetTask = new PlayResetTimeout ( $this );
-		$taskWaitTime = $resetValue * $this->getServer()->getTicksPerSecond();
-		$this->getServer ()->getScheduler ()->scheduleRepeatingTask ( $resetTask, $taskWaitTime );
-		$this->getLogger()->info ( TextFormat::GREEN . $this->getMsg ( "plugin.schedule.reset" ) . $resetValue . " " . $this->getMsg ( "plugin.schedule.time" ) );
-		$this->getLogger()->info( TextFormat::GREEN . "-------------------------------------------------" );
-		// test language selftest messages 
-		if ($this->getConfig()->get("run_selftest_message")=="YES") {
-			$stmsg = new SpleefTestMessages ( $this );
-			$stmsg->runTests ();
-		}
-		$time_end = microtime ( true );
-		$time = $time_end - $time_start;
-		$this->getLogger ()->info ( TextFormat::AQUA . "server ticks per second: ".$this->getServer()->getTicksPerSecond(). " or ".$taskWaitTime. " ticks");
-		$this->getLogger ()->info ( TextFormat::AQUA . "took time $time seconds" );
+		$this->getLogger ()->info ( TextFormat::GREEN . "Spleef Enabled" );
+		$this->getLogger ()->info ( TextFormat::GREEN . "-------------------------------------------------" );		
+		$this->initScheduler();
+		$this->initMessageTests();
+		$this->enabled = true;
 	}
+	
 	public function setGameType($type) {
 		$this->gameType = $type;
 	}
@@ -111,7 +89,52 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	 */
 	public function onDisable() {
 		$this->enabled = false;
-		$this->getLogger()->info(TextFormat::GREEN . $this->getMsg ( "plugin.disable" ) );
+		$this->getLogger ()->info ( TextFormat::GREEN . "Spleef Disabled" );
+	}
+	private function initConfigFile() {
+		try {
+			$this->saveDefaultConfig ();
+			if (! file_exists ( $this->getDataFolder () )) {
+				@mkdir ( $this->getDataFolder (), 0777, true );
+				file_put_contents ( $this->getDataFolder () . "config.yml", $this->getResource ( "config.yml" ) );
+			}
+			$this->reloadConfig ();
+			$this->getConfig ()->getAll ();
+		} catch ( \Exception $e ) {
+			$this->getLogger ()->error ( $e->getMessage());
+		}
+	}
+	private function initMinigameComponents() {
+		// move initialization here
+		try {
+			$this->setup = new SpleefSetup ( $this );
+			$this->messages = new SpleefMessages ( $this );
+			$this->builder = new SpleefArenaBuilder ( $this );
+			$this->controller = new SpleefController ( $this );
+			$this->gamekit = new SpleefGameKit ( $this );
+			
+		} catch ( \Exception $ex ) {
+			$this->getLogger ()->info ( $e->getMessage() );
+		}
+	}
+	
+	private function initScheduler() {
+		// run reset scheduler
+		$resetValue = $this->setup->getRoundResetTime ();
+		$resetTask = new PlayResetTimeout ( $this );
+		$taskWaitTime = $resetValue * $this->getServer ()->getTicksPerSecond ();
+		$this->getServer ()->getScheduler ()->scheduleRepeatingTask ( $resetTask, $taskWaitTime );
+		$this->getLogger ()->info ( TextFormat::GREEN . "server ticks per second: " . $this->getServer ()->getTicksPerSecond () . " or " . $taskWaitTime . " ticks" );
+		$this->getLogger ()->info ( TextFormat::GREEN . "Reset schedule task to run every " . $resetValue . " seconds" );
+		$this->getLogger ()->info ( TextFormat::GREEN . "-------------------------------------------------" );		
+	}
+	
+	private function initMessageTests() {
+		// test language selftest messages
+		if ($this->getConfig ()->get ( "run_selftest_message" ) == "YES") {
+			$stmsg = new SpleefTestMessages ( $this );
+			$stmsg->runTests ();
+		}
 	}
 	
 	/**
@@ -123,9 +146,7 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
 		$this->controller->onCommand ( $sender, $command, $label, $args );
 	}
-	
 	protected function getMsg($key) {
 		return $this->messages->getMessageByKey ( $key );
 	}
-	
 }

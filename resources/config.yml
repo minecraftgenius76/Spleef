@@ -1,11 +1,11 @@
 # ---------------------------
 # SPLEEF MINI-GAME PLUGIN
 # CONFIGURATION FILE
-# Version 1.5.0
+# Version 1.5.1
 # ---------------------------
 # specify language to use
 language: "EN"
-run_selftest_message: "NO"
+run_selftest_message: "YES"
 # ---------------------------------
 # Enforce Player alway goto server lobby
 # Default is OFF 
