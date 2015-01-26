@@ -114,7 +114,7 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 			$this->gamekit = new SpleefGameKit ( $this );
 			
 		} catch ( \Exception $ex ) {
-			$this->getLogger ()->info ( $e->getMessage() );
+			$this->getLogger ()->info ( $ex->getMessage() );
 		}
 	}
 	
