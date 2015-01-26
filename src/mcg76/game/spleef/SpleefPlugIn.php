@@ -70,7 +70,7 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	public function onEnable() {
 		$time_start = microtime ( true );
 		if (! file_exists ( $this->getDataFolder () . "config.yml" )) {
-			@mkdir ( $this->getDataFolder () );
+			@mkdir ( $this->getDataFolder (), 0777, true );
 			file_put_contents ( $this->getDataFolder () . "config.yml", $this->getResource ( "config.yml" ) );
 		}
 		$this->getConfig ()->getAll ();

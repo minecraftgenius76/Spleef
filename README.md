@@ -87,6 +87,17 @@ or copy your setting over to new configuration file
 Just drop mcg76_Spleef_v1.5.phar into PocketMine Server plugin folder 
 Restart server
 
+KNOW ISSUE WITH INSTALLATION:
+-----------------------------------------------------
+for unknown reason on first install configuration file is not created properly, this result a crash.
+Temporary workaround to fix this error, please copy this file setting 
+
+https://github.com/minecraftgenius76/Spleef/blob/master/resources/config.yml
+to your server mcg76_spleef folder /config.yml 
+
+restart the server, this should work now.
+
+
 Configuration: (config.xml)
 # ---------------------------
 # SPLEEF MINI-GAME PLUGIN
