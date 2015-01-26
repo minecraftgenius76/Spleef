@@ -15,7 +15,6 @@ use pocketmine\level\Explosion;
 use pocketmine\event\block\BlockEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\entity\EntityMoveEvent;
 use pocketmine\event\entity\EntityMotionEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
