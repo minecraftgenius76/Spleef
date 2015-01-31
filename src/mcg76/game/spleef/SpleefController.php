@@ -454,7 +454,6 @@ class SpleefController extends MiniGameBase {
 	 */
 	public function getLevel($levelhome) {
 		if (! Server::getInstance ()->isLevelGenerated ( $levelhome )) {
-			$player->sendMessage ( $this->getMsg ( "configuration.error.level-not-generated" ) );
 			$this->log ( "Error :" . $levelhome . " has NOT generated yet!" );
 			return null;
 		}
