@@ -454,6 +454,7 @@ class SpleefController extends MiniGameBase {
 	 */
 	public function getLevel($levelhome) {
 		if (! Server::getInstance ()->isLevelGenerated ( $levelhome )) {
+			//$player->sendMessage ( $this->getMsg ( "configuration.error.level-not-generated" ) );
 			$this->log ( "Error :" . $levelhome . " has NOT generated yet!" );
 			return null;
 		}
@@ -524,7 +525,7 @@ class SpleefController extends MiniGameBase {
 			$arenaSize = $this->getSetup ()->getArenaSize ();
 			// build the floors
 			$level = $player->level;
-			$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, ($arenaSize + 10), 35, "inside" );
+			$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, ($arenaSize + 10), 80, "inside" );
 			// build small ring - 80 - snow
 			$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, $arenaSize, 80, "arena" );
 			// brodcast

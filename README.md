@@ -3,6 +3,16 @@ MCG76 Minigame "Spleef" plugin for MCPE Server | PocketMine alpha 1.4x
 ===============================================================================================
 New MCPE version of Spleef a self-running game that reset the arena itself after each play.
 
+Spleef version 1.5.3 - Jan.31.2015
+Changes:
+- reset entire arena floor to snow block
+- add configuration flags to prevent regular players breaking or placing blocks other than snow block in arena world
+
+# config.yml - added in jan.31.2015
+# prevent regular player destroy arena blocks other than snow blocks
+disable_Spleef_world_blockBreak: true
+disable_Spleef_world_blockPlace: true
+
 Spleef version 1.5.1 - Jan.25.2015
 - fixed first time config.xml is empty error
 

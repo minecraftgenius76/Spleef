@@ -1,7 +1,7 @@
 # ---------------------------
 # SPLEEF MINI-GAME PLUGIN
 # CONFIGURATION FILE
-# Version 1.5.1
+# Version 1.5.3
 # ---------------------------
 # specify language to use
 language: "EN"
@@ -12,6 +12,11 @@ run_selftest_message: "YES"
 # spawn on map savespawn location
 # ---------------------------------
 enable_spaw_lobby: "NO"
+# ---------------------------
+# added in jan.31.2015
+# prevent regular player destroy arena blocks other than snow blocks
+disable_Spleef_world_blockBreak: true
+disable_Spleef_world_blockPlace: true
 # ---------------------------------
 server_lobby_world: "world"
 server_lobby_x: "489"

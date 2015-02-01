@@ -45,6 +45,9 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	
 	// setup mode
 	public $setupModeAction = "";
+
+	//game world
+	public $SpleefWorldName;	
 	
 	/**
 	 * OnLoad
@@ -65,6 +68,8 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 	 */
 	public function onEnable() {
 		$this->initConfigFile ();
+		//enable language support
+		//$this->messages->loadLanguageMessages();
 		//register listener
 		$this->getServer ()->getPluginManager ()->registerEvents ( new SpleefListener ( $this ), $this );
 		$this->getLogger ()->info ( TextFormat::GREEN . "Spleef Enabled" );
@@ -100,6 +105,10 @@ class SpleefPlugin extends PluginBase implements CommandExecutor {
 			}
 			$this->reloadConfig ();
 			$this->getConfig ()->getAll ();
+			
+			//set game world
+			$this->SpleefWorldName = $this->setup->getHomeWorldName();
+			
 		} catch ( \Exception $e ) {
 			$this->getLogger ()->error ( $e->getMessage());
 		}

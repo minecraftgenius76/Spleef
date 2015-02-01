@@ -89,6 +89,20 @@ class SpleefSetup extends MiniGameBase {
 		}
 		return $configlang;
 	}
+	
+	public function isSpleefWorldBlockBreakDisable() {
+		return $this->getConfig("disable_Spleef_world_blockBreak", true );
+	}
+	
+	public function isSpleefWorldBlockPlaceDisable() {
+		return $this->getConfig("disable_Spleef_world_blockPlace", true );
+	}
+	
+	public function getHomeWorldName() {
+		$worldName = $this->getConfig ( "spleef_home_world" );
+		return $worldName;
+	}
+	
 	public function setSpeefHomeLocation(Position $pos) {
 		$success = false;
 		try {
@@ -155,6 +169,7 @@ class SpleefSetup extends MiniGameBase {
 		}
 		return $success;
 	}
+	 
 	public function disableSelfReset() {
 		$success = false;
 		try {
@@ -210,10 +225,7 @@ class SpleefSetup extends MiniGameBase {
 		$dataZ = $this->getConfig ( "spleef_home_z" );
 		return new Position ( $dataX, $dataY, $dataZ );
 	}
-	public function getHomeWorldName() {
-		$worldName = $this->getConfig ( "spleef_home_world" );
-		return $worldName;
-	}
+
 	public function isEnableSpanwToLobby() {
 		$enableSpawnLobby = $this->getConfig ( "enable_spaw_lobby" );
 		if ($enableSpawnLobby != null && $enableSpawnLobby == "YES") {

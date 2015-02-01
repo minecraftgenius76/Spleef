@@ -29,7 +29,6 @@ use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
-
 use pocketmine\network\protocol\UpdateBlockPacket;
 use pocketmine\block\Block;
 use pocketmine\network\protocol\Info;
@@ -63,6 +62,16 @@ class SpleefListener extends MiniGameBase implements Listener {
 			$event->getPlayer ()->sendMessage ( "BREAKED: [x=" . $b->x . " y=" . $b->y . " z=" . $b->z . "]" );
 			return;
 		}
+		if ($event->getPlayer () instanceof Player) {
+			$player = $event->getPlayer ();
+			if (strtolower ( $player->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
+				if ($this->getSetup ()->isSpleefWorldBlockBreakDisable () || ! $player->isOp ()) {
+					if ($b->getId () != 80) {
+						$event->setCancelled ( true );
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -76,6 +85,13 @@ class SpleefListener extends MiniGameBase implements Listener {
 			$event->getPlayer ()->sendMessage ( "PLACED: [x=" . $b->x . " y=" . $b->y . " z=" . $b->z . "]" );
 			return;
 		}
+		if (strtolower ( $player->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
+			if ($this->getSetup ()->isSpleefWorldBlockPlaceDisable () || ! $player->isOp ()) {
+				if ($b->getId () != 80) {
+					$event->setCancelled ( true );
+				}
+			}
+		}
 	}
 	
 	/**
@@ -86,18 +102,18 @@ class SpleefListener extends MiniGameBase implements Listener {
 	public function onPlayerJoin(PlayerJoinEvent $event) {
 		$player = $event->getPlayer ();
 		if ($player instanceof Player) {
-			$this->getController()->enterGameWorld($player);
+			$this->getController ()->enterGameWorld ( $player );
 		}
 	}
 	
 	/**
 	 *
-	 * @param PlayerRespawnEvent $event
+	 * @param PlayerRespawnEvent $event        	
 	 */
 	public function onPlayerRespawn(PlayerRespawnEvent $event) {
 		$player = $event->getPlayer ();
 		if ($player instanceof Player) {
-			$this->getController()->enterGameWorld($player);
+			$this->getController ()->enterGameWorld ( $player );
 		}
 	}
 	
@@ -109,32 +125,32 @@ class SpleefListener extends MiniGameBase implements Listener {
 	public function onPlayerMove(PlayerMoveEvent $event) {
 		$player = $event->getPlayer ();
 		if ($player instanceof Player) {
-			$v = round ( $event->getTo()->x ) . "," . round ($event->getTo()->y ) . "," . round ( $event->getTo()->z );
-			$this->getController()->trackArenaPlayers($player,$v);
+			$v = round ( $event->getTo ()->x ) . "," . round ( $event->getTo ()->y ) . "," . round ( $event->getTo ()->z );
+			$this->getController ()->trackArenaPlayers ( $player, $v );
 		}
 	}
-		
+	
 	/**
 	 * Player touch Block
-	 * 
-	 * @param PlayerInteractEvent $event
+	 *
+	 * @param PlayerInteractEvent $event        	
 	 */
 	public function onPlayerInteract(PlayerInteractEvent $event) {
 		$b = $event->getBlock ();
-		$player = $event->getPlayer();
+		$player = $event->getPlayer ();
 		if ($player instanceof Player) {
 			if ($this->getPlugin ()->pos_display_flag == 1) {
-				//$event->getPlayer ()->sendMessage ( "TOUCHED: [" . $b . "]" );
+				// $event->getPlayer ()->sendMessage ( "TOUCHED: [" . $b . "]" );
 				$event->getPlayer ()->sendMessage ( "TOUCHED: [x=" . $b->x . " y=" . $b->y . " z=" . $b->z . "]" );
 			}
-			$this->getController ()->handleCLickJoinGame ( $player,$b );
-			$this->getController ()->handleClickStartGame ($player,$b);
-			$this->getController ()->handleClickSignTeleporting ( $player,$b );
+			$this->getController ()->handleCLickJoinGame ( $player, $b );
+			$this->getController ()->handleClickStartGame ( $player, $b );
+			$this->getController ()->handleClickSignTeleporting ( $player, $b );
 			
-			//process sign setup actions
-			if ($this->getPlugin()->setupModeAction!="") {
-				$this->getSetup()->handleClickButtonSetup($player, $this->getPlugin()->setupModeAction, new Position($b->x,$b->y,$b->z));
-				$this->getSetup()->handleClickSignSetup($player, $this->getPlugin()->setupModeAction, new Position($b->x,$b->y,$b->z));
+			// process sign setup actions
+			if ($this->getPlugin ()->setupModeAction != "") {
+				$this->getSetup ()->handleClickButtonSetup ( $player, $this->getPlugin ()->setupModeAction, new Position ( $b->x, $b->y, $b->z ) );
+				$this->getSetup ()->handleClickSignSetup ( $player, $this->getPlugin ()->setupModeAction, new Position ( $b->x, $b->y, $b->z ) );
 			}
 		}
 	}
@@ -155,7 +171,7 @@ class SpleefListener extends MiniGameBase implements Listener {
 		if ($line1 != null && $line1 == "spleef") {
 			if ($line2 != null && $line2 == "stats") {
 				$event->setLine ( 2, "Arena Players" );
-				$event->setLine ( 3, count ( $this->getPlugin()->arenaPlayers ) );
+				$event->setLine ( 3, count ( $this->getPlugin ()->arenaPlayers ) );
 				return;
 			}
 			if ($line2 != null && $line2 == "home") {
@@ -176,29 +192,29 @@ class SpleefListener extends MiniGameBase implements Listener {
 	public function onQuit(PlayerQuitEvent $event) {
 		$player = $event->getPlayer ();
 		if ($player instanceof Player) {
-			$this->getController()->leaveGameWorld($player);
+			$this->getController ()->leaveGameWorld ( $player );
 		}
 	}
 	
 	/**
-	 * 
+	 *
 	 * Player Death Event
-	 * 
-	 * @param PlayerDeathEvent $event
+	 *
+	 * @param PlayerDeathEvent $event        	
 	 */
 	public function onPlayerDeath(PlayerDeathEvent $event) {
 		if ($event->getEntity () instanceof Player) {
-			$this->getController()->leaveGameWorld($event->getEntity ());
+			$this->getController ()->leaveGameWorld ( $event->getEntity () );
 		}
-	}	
+	}
 	/**
 	 * Player Got Kicked
-	 * 
-	 * @param PlayerKickEvent $event
+	 *
+	 * @param PlayerKickEvent $event        	
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) {
 		if ($event->getPlayer () instanceof Player) {
-			$this->getController()->leaveGameWorld($event->getPlayer());
+			$this->getController ()->leaveGameWorld ( $event->getPlayer () );
 		}
 	}
 }
