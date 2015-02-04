@@ -73,11 +73,11 @@ class SpleefListener extends MiniGameBase implements Listener {
 			}
 		}
 	}
-	
+		
 	/**
 	 * onBlockPlace
 	 *
-	 * @param BlockPlaceEvent $event        	
+	 * @param BlockPlaceEvent $event
 	 */
 	public function onBlockPlace(BlockPlaceEvent $event) {
 		$b = $event->getBlock ();
@@ -85,10 +85,12 @@ class SpleefListener extends MiniGameBase implements Listener {
 			$event->getPlayer ()->sendMessage ( "PLACED: [x=" . $b->x . " y=" . $b->y . " z=" . $b->z . "]" );
 			return;
 		}
-		if (strtolower ( $player->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
-			if ($this->getSetup ()->isSpleefWorldBlockPlaceDisable () || ! $player->isOp ()) {
-				if ($b->getId () != 80) {
-					$event->setCancelled ( true );
+		if ($event->getPlayer () instanceof Player) {
+			if (strtolower ( $event->getPlayer ()->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
+				if ($this->getSetup ()->isSpleefWorldBlockPlaceDisable () || ! $player->isOp ()) {
+					if ($b->getId () != 80) {
+						$event->setCancelled ( true );
+					}
 				}
 			}
 		}
