@@ -65,7 +65,7 @@ class SpleefListener extends MiniGameBase implements Listener {
 		if ($event->getPlayer () instanceof Player) {
 			$player = $event->getPlayer ();
 			if (strtolower ( $player->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
-				if ($this->getSetup ()->isSpleefWorldBlockBreakDisable () || ! $player->isOp ()) {
+				if ($this->getSetup ()->isSpleefWorldBlockBreakDisable () && ! $player->isOp ()) {
 					if ($b->getId () != 80) {
 						$event->setCancelled ( true );
 					}
@@ -87,7 +87,7 @@ class SpleefListener extends MiniGameBase implements Listener {
 		}
 		if ($event->getPlayer () instanceof Player) {
 			if (strtolower ( $event->getPlayer ()->level->getName () ) == strtolower ( $this->getSetup ()->getHomeWorldName () )) {
-				if ($this->getSetup ()->isSpleefWorldBlockPlaceDisable () || ! $event->getPlayer ()->isOp ()) {
+				if ($this->getSetup ()->isSpleefWorldBlockPlaceDisable () && ! $event->getPlayer ()->isOp ()) {
 					if ($b->getId () != 80) {
 						$event->setCancelled ( true );
 					}
