@@ -1,0 +1,66 @@
+# -----------------------------------------------------------
+# MinecraftGenius76 
+# Mini-Games - SPLEEF
+# Youtube: http://www.youtube.com/user/minecraftgenius76
+# language file
+# Contributor(s): José Vázquez (jose-vm)
+# -----------------------------------------------------------
+languageCode: "SP"
+languageName: "Spanish"
+languageDescription: "Mexican Spanish"
+version: "1.0"
+# -----------------------------------------------------------
+spleef:
+ name: "SPLEEF"
+ welcome: "Bienvenido a Spleef Arena"
+ havefun: "¡Diviertete!"
+ setup:
+   action: "Modo de Configuración: " 
+   select: "[Elige un bloque para FIJAR una ubicación]" 
+   success: "¡Configuración exitosa!"
+   failed: "¡Configuración fallida!"
+ command:
+  create: 
+    success: "¡Arena de Spleef creada!"
+  reset: 
+    success: "¡Arena de Spleef reiniciada!"   
+  blockon: 
+    success: "¡Mostrador de bloques encendido!"       
+  blockoff: 
+    success: "¡Mostrador de bloques apagado!"          
+  error:
+   no-authorization: "¡No estas autorizado para usar este comando!"
+   in-game-only: "Esto comando solo puede ser usado en juego."
+ hits:
+   toplay: "Golpea el button de Inicio para jugar"
+ game:
+   started: "¡Juego iniciado!" 
+   stats: "Estadísticas de Arena de Spleef"
+   players: "Jugadores: "   
+   reset-in: "Restablecer en "
+   gogogo: "¡CORRE!" 
+   conglatulation: "FELICIDADES"
+   round-winner: "Ganador(es) de esta ronda:"
+   wait-for-reset: "La ronda sigue en juego. Por favor espera."
+   manual-reset: "o manualmente reinicia usando el comando admin"
+teleporting:
+ lobby:
+  world: "Teletransportando al mundo del Lobby"
+  location: "Teletransportando a la localización del Lobby"  
+ spleef:
+  location: "Teletransportando al mundo de Spleef" 
+configuration:
+ error: 
+  missing:
+    arena-entrace: "¡Falta por configurar información de la Arena de Spleef!"
+    level-not-found: "Nivel no encontrado: "    
+  level-not-generated: "Error: NO ha sido generado, aún."
+ contact:
+   admin: "Por favor reportalo al administrador."
+plugin:
+ name: "[SPLEEF]"
+ enable: "Spleef - ENCENDIDO"
+ disable: "Spleef - APAGADO"
+ schedule:
+  reset: "Reiniciar fijación de trabajo a que empieze cada "
+  time: " segundos"
