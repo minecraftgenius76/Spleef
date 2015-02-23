@@ -15,19 +15,20 @@ spleef:
  welcome: "欢迎Speef竞技场"
  havefun: "玩得开心!"
  setup:
-   action: "Setup Mode Action: " 
-   select: "[Select a Block to SET that location]" 
+   action: "设置模式开启: " 
+   select: "[请选择一个方块来设定区域" 
    success: "设置成功!"
    failed: "设置失败!"
  command:
   create: 
-    success: "Spleef Arena Created!"
+    success: "掘一死战创建成功!"
   reset: 
-    success: "Spleef Arena Reseted!"   
+
+    success: "掘一死战重置成功!"   
   blockon: 
-    success: "Block Display ON!"       
+    success: "方块显示[开启]!"       
   blockoff: 
-    success: "Block Display OFF!"          
+    success: "方块显示[关闭]!"          
   error:
    no-authorization: "你没有权限使用这个指令！"
    in-game-only: "请在游戏中执行该指令"
@@ -37,7 +38,7 @@ spleef:
    started: "游戏开始!" 
    stats: "掘一死战状态"
    players: "玩家:"   
-   reset-in: "Reset In "
+   reset-in: "游戏已重置"
    gogogo: "冲，冲，冲!!!!" 
    conglatulation: "CONGLATULATION"
    round-winner: "本回合获胜者:"
