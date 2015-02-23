@@ -17,8 +17,8 @@ spleef:
  setup:
    action: "Setup Mode Action: " 
    select: "[Select a Block to SET that location]" 
-   success: "setup success!"
-   failed: "setup failed!"
+   success: "设置成功!"
+   failed: "设置失败!"
  command:
   create: 
     success: "Spleef Arena Created!"
@@ -29,18 +29,19 @@ spleef:
   blockoff: 
     success: "Block Display OFF!"          
   error:
-   no-authorization: "You are not authorized to use this command!"
+   no-authorization: "你没有权限使用这个指令！"
    in-game-only: "This command is in-game-only."
  hits:
-   toplay: "Hit Start button to play"
+   toplay: "请触摸开始按钮来开始游戏"
  game:
-   started: "Game Started!" 
+   started: "游戏开始!" 
    stats: "Spleef Arena Stats"
-   players: "Players :"   
+   players: "玩家 :"   
    reset-in: "Reset In "
    gogogo: "Go, Go, Go!!!!" 
    conglatulation: "CONGLATULATION"
-   round-winner: "This Round Winner(s):"
+   round-winner: "本回合获
+胜者:"
    wait-for-reset: "game round still on. Please wait."
    manual-reset: "or manual reset using admin command"
 teleporting:
