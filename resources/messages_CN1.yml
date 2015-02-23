@@ -30,39 +30,38 @@ spleef:
     success: "Block Display OFF!"          
   error:
    no-authorization: "你没有权限使用这个指令！"
-   in-game-only: "This command is in-game-only."
+   in-game-only: "请在游戏中执行该指令"
  hits:
-   toplay: "请触摸开始按钮来开始游戏"
+   toplay: "请触摸开始按钮开始游戏"
  game:
    started: "游戏开始!" 
-   stats: "Spleef Arena Stats"
-   players: "玩家 :"   
+   stats: "掘一死战状态"
+   players: "玩家:"   
    reset-in: "Reset In "
-   gogogo: "Go, Go, Go!!!!" 
+   gogogo: "冲，冲，冲!!!!" 
    conglatulation: "CONGLATULATION"
-   round-winner: "本回合获
-胜者:"
-   wait-for-reset: "game round still on. Please wait."
-   manual-reset: "or manual reset using admin command"
+   round-winner: "本回合获胜者:"
+   wait-for-reset: "游戏进行中，请等待…"
+   manual-reset: "或者腐竹使用指令来重载游戏"
 teleporting:
  lobby:
-  world: "teleporting to lobby world"
-  location: "teleporting to lobby location"  
+  world: "传送回主城中…"
+  location: "返回主城出生点"  
  spleef:
-  location: "teleport to SPEEF home world" 
+  location: "传送到[掘一死战]世界" 
 configuration:
  error: 
   missing:
-    arena-entrace: "Missing Spleef Arena Entrance Configuration info!"
-    level-not-found: "level not found: "    
-  level-not-generated: "Error has NOT generated yet!"
+    arena-entrace: "找不到掘一死战入口设置!"
+    level-not-found: "找不到地图: "    
+  level-not-generated: "世界未加载!"
  contact:
-   admin: "Please report to administrator."
+   admin: "请联系腐竹."
 plugin:
- name: "[SPLEEF]"
- enable: "Spleef Mini-Game - ENABLED"
- disable: "Spleef Mini-Game - DISABLED "
+ name: "[掘一死战]"
+ enable: "掘一死战-开放中"
+ disable: "掘一死战-关闭中"
  schedule:
-  reset: "Reset schedule task to run every "
-  time: " seconds "
+  reset: "游戏重载计划被设定为每"
+  time: " 秒 "
 
