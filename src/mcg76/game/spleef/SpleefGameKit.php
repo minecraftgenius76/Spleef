@@ -473,7 +473,7 @@ class SpleefGameKit extends MiniGameBase {
 		}
 		$p->getInventory ()->setHeldItemIndex ( 0 );		
 		$p->getInventory()->sendArmorContents($p->getInventory()->getViewers());
-		$p->updateMovement ();
+		//$p->updateMovement ();
 	}
 	
 	/**
@@ -489,6 +489,6 @@ class SpleefGameKit extends MiniGameBase {
 		$bp->getInventory ()->clearAll ();
 		$bp->getInventory ()->sendContents ( $bp );
 		$bp->getInventory()->sendArmorContents($bp->getInventory()->getViewers());
-		$bp->updateMovement ();
+		// $bp->updateMovement ();
 	}
 }
