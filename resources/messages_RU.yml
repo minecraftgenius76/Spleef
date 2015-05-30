@@ -1,0 +1,66 @@
+# -----------------------------------------------------------
+# MinecraftGenius76 
+# Mini-Games - SPLEEF
+# Youtube: http://www.youtube.com/user/minecraftgenius76
+# language file
+# Contributor(s): mcg76, vvzar
+# -----------------------------------------------------------
+languageCode: "RU"
+languageName: "RUSSIAN"
+languageDescription: "Russian"
+version: "1.50"
+# -----------------------------------------------------------
+spleef:
+ name: "СПЛИФ"
+ welcome: "Добро пожаловать на Сплиф Арену!"
+ havefun: "удачи !"
+ setup:
+   action: "Режим Установки: " 
+   select: "[Выбери блок, чтобы установить это место.]" 
+   success: "установка выполнена !"
+   failed: "сбой установки !"
+ command:
+  create: 
+    success: "Сплиф Арена Создана !"
+  reset: 
+    success: "Сплиф Арена обновлена !"   
+  blockon: 
+    success: "Отображение блока включено !"       
+  blockoff: 
+    success: "Отображение блока выключено !"          
+  error:
+   no-authorization: "У тебя нет разрешений для использования этой команды !"
+   in-game-only: "Эту команду можно использовать только в игре."
+ hits:
+   toplay: "Тапни кнопку Старт для начала игры."
+ game:
+   started: "Игра началась !" 
+   stats: "Статистика Сплиф Арены :"
+   players: "Игроков :"   
+   reset-in: "Сброс через : "
+   gogogo: "Поехали !!!!" 
+   conglatulation: "ПОЗДРАВЛЯЕМ !"
+   round-winner: "Победители в этом раунде : "
+   wait-for-reset: "Идет игра, подожди немного ."
+   manual-reset: "или сбрось вручную, используя Административный доступ"
+teleporting:
+ lobby:
+  world: "Перемещаемся в Мир Лобби"
+  location: "перемещаемся в лобби"  
+ spleef:
+  location: "перемещаемся в мир СПЛИФ" 
+configuration:
+ error: 
+  missing:
+    arena-entrace: "Отсутствует информация по настройке Входа на Сплиф Арену !"
+    level-not-found: "мир не найден: "    
+  level-not-generated: "Ошибка ! Мир еще не создан !"
+ contact:
+   admin: "Пожалуйста, сообщите администратору."
+plugin:
+ name: "[СПЛИФ]"
+ enable: "Мини-Игра Spleef - ВКЛЮЧЕНА"
+ disable: "Мини-Игра Spleef - ВЫКЛЮЧЕНА"
+ schedule:
+  reset: "Запланирован перезапуск каждые "
+  time: " секунд "
