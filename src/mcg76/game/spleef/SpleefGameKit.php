@@ -18,7 +18,7 @@ use pocketmine\item\ItemBlock;
  */
 class SpleefGameKit extends MiniGameBase {
 	const DIR_KITS = "kits/";
-	//kit types
+	// kit types
 	const KIT_DIAMOND_ARMOR = "diamond_kit";
 	const KIT_GOLD_ARMOR = "gold_kit";
 	const KIT_IRON_ARMOR = "iron_kit";
@@ -26,15 +26,13 @@ class SpleefGameKit extends MiniGameBase {
 	const KIT_CHAIN_ARMOR = "chain_kit";
 	const KIT_NO_ARMOR = "no_armor_kit";
 	const KIT_UNKNOWN = "Unknown";
-	
-	private $kits = [];
-	
+	private $kits = [ ];
 	public function __construct(SpleefPlugIn $plugin) {
 		parent::__construct ( $plugin );
 		$this->init ();
 	}
 	private function init() {
-		@mkdir ( $this->getPlugin()->getDataFolder () . self::DIR_KITS, 0777, true );
+		@mkdir ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS, 0777, true );
 		$this->getKit ( self::KIT_GOLD_ARMOR );
 		$this->getKit ( self::KIT_IRON_ARMOR );
 		$this->getKit ( self::KIT_DIAMOND_ARMOR );
@@ -42,33 +40,33 @@ class SpleefGameKit extends MiniGameBase {
 		$this->getKit ( self::KIT_CHAIN_ARMOR );
 		$this->getKit ( self::KIT_NO_ARMOR );
 		
-		$this->kits=array(
-				self::KIT_GOLD_ARMOR=>self::KIT_GOLD_ARMOR,
-				self::KIT_IRON_ARMOR=>self::KIT_IRON_ARMOR,
-				self::KIT_DIAMOND_ARMOR=>self::KIT_DIAMOND_ARMOR,
-				self::KIT_LEATHER_ARMOR=>self::KIT_LEATHER_ARMOR,
-				self::KIT_NO_ARMOR=>self::KIT_NO_ARMOR,
-				self::KIT_CHAIN_ARMOR=>self::KIT_CHAIN_ARMOR
+		$this->kits = array (
+				self::KIT_GOLD_ARMOR => self::KIT_GOLD_ARMOR,
+				self::KIT_IRON_ARMOR => self::KIT_IRON_ARMOR,
+				self::KIT_DIAMOND_ARMOR => self::KIT_DIAMOND_ARMOR,
+				self::KIT_LEATHER_ARMOR => self::KIT_LEATHER_ARMOR,
+				self::KIT_NO_ARMOR => self::KIT_NO_ARMOR,
+				self::KIT_CHAIN_ARMOR => self::KIT_CHAIN_ARMOR 
 		);
 	}
 	
 	/**
 	 * generate a random kits for player
-	 * 
-	 * @param Player $p
+	 *
+	 * @param Player $p        	
 	 */
 	public function putOnRandomGameKit(Player $p) {
-		$kittype = array_rand ($this->kits );
-		$selectedKit = $this->kits [$kittype];		
-		$this->putOnGameKit($p, $selectedKit);
+		$kittype = array_rand ( $this->kits );
+		$selectedKit = $this->kits [$kittype];
+		$this->putOnGameKit ( $p, $selectedKit );
 	}
 	
-   /**
-    * wear game kits
-    * 
-    * @param Player $p
-   * @param unknown $kitType
-   */
+	/**
+	 * wear game kits
+	 *
+	 * @param Player $p        	
+	 * @param unknown $kitType        	
+	 */
 	public function putOnGameKit(Player $p, $kitType) {
 		switch ($kitType) {
 			case self::KIT_GOLD_ARMOR :
@@ -88,7 +86,7 @@ class SpleefGameKit extends MiniGameBase {
 				break;
 			case self::KIT_NO_ARMOR :
 				$this->loadKit ( self::KIT_NO_ARMOR, $p );
-				break;								
+				break;
 			default :
 				// no armors kit
 				$this->loadKit ( self::KIT_UNKNOWN, $p );
@@ -97,13 +95,13 @@ class SpleefGameKit extends MiniGameBase {
 	
 	/**
 	 * Get Game Kit By Name
-	 * 
-	 * @param unknown $kitName
+	 *
+	 * @param unknown $kitName        	
 	 * @return \pocketmine\utils\Config
 	 */
 	public function getKit($kitName) {
-		if (! (file_exists ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml" ))) {			
-			if ($kitName == self::KIT_GOLD_ARMOR) {				
+		if (! (file_exists ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml" ))) {
+			if ($kitName == self::KIT_GOLD_ARMOR) {
 				return new Config ( $this->plugin->getDataFolder () . self::DIR_KITS . strtolower ( self::KIT_GOLD_ARMOR ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_GOLD_ARMOR,
 						"isDefault" => false,
@@ -157,7 +155,7 @@ class SpleefGameKit extends MiniGameBase {
 						) 
 				) );
 			} elseif ($kitName == self::KIT_IRON_ARMOR) {
-				return new Config ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
+				return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_IRON_ARMOR,
 						"isDefault" => false,
 						"cost" => 0,
@@ -210,7 +208,7 @@ class SpleefGameKit extends MiniGameBase {
 						) 
 				) );
 			} elseif ($kitName == self::KIT_CHAIN_ARMOR) {
-				return new Config ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
+				return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_CHAIN_ARMOR,
 						"isDefault" => false,
 						"cost" => 0,
@@ -263,7 +261,7 @@ class SpleefGameKit extends MiniGameBase {
 						) 
 				) );
 			} elseif ($kitName == self::KIT_DIAMOND_ARMOR) {
-				return new Config ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
+				return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_DIAMOND_ARMOR,
 						"isDefault" => false,
 						"cost" => 0,
@@ -316,7 +314,7 @@ class SpleefGameKit extends MiniGameBase {
 						) 
 				) );
 			} elseif ($kitName == self::KIT_LEATHER_ARMOR) {
-				return new Config ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
+				return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_CHAIN_ARMOR,
 						"isDefault" => false,
 						"cost" => 0,
@@ -369,7 +367,7 @@ class SpleefGameKit extends MiniGameBase {
 						) 
 				) );
 			} elseif ($kitName == self::KIT_NO_ARMOR) {
-				return new Config ( $this->getPlugin()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
+				return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_KITS . strtolower ( $kitName ) . ".yml", Config::YAML, array (
 						"kitName" => self::KIT_NO_ARMOR,
 						"isDefault" => false,
 						"cost" => 0,
@@ -429,66 +427,58 @@ class SpleefGameKit extends MiniGameBase {
 	
 	/**
 	 * Load Game Kit
-	 * 
-	 * @param unknown $teamkitName
-	 * @param Player $p
+	 *
+	 * @param unknown $teamkitName        	
+	 * @param Player $p        	
 	 */
 	public function loadKit($teamkitName, Player $p) {
 		$teamKit = $this->getKit ( $teamkitName )->getAll ();
-		
-		// player must clear all equipments
-		$p->getInventory ()->clearAll ();
-		// add armors
-		if ($teamKit ["armors"] ["helmet"] [0] != null) {
-			$p->getInventory ()->setHelmet ( new Item ( $teamKit ["armors"] ["helmet"] [0], $teamKit ["armors"] ["helmet"] [1], $teamKit ["armors"] ["helmet"] [2] ) );
+		if (! empty ( $p->getInventory () ) && ! is_null ( $p )) {
+			$p->getInventory ()->clearAll ();
+			// add armors
+			if ($teamKit ["armors"] ["helmet"] [0] != null) {
+				$p->getInventory ()->setHelmet ( new Item ( $teamKit ["armors"] ["helmet"] [0], $teamKit ["armors"] ["helmet"] [1], $teamKit ["armors"] ["helmet"] [2] ) );
+			}
+			if ($teamKit ["armors"] ["chestplate"] [0] != null) {
+				$p->getInventory ()->setChestplate ( new Item ( $teamKit ["armors"] ["chestplate"] [0], $teamKit ["armors"] ["chestplate"] [1], $teamKit ["armors"] ["chestplate"] [2] ) );
+			}
+			if ($teamKit ["armors"] ["leggings"] [0] != null) {
+				$p->getInventory ()->setLeggings ( new Item ( $teamKit ["armors"] ["leggings"] [0], $teamKit ["armors"] ["leggings"] [1], $teamKit ["armors"] ["leggings"] [2] ) );
+			}
+			if ($teamKit ["armors"] ["boots"] [0] != null) {
+				$p->getInventory ()->setBoots ( new Item ( $teamKit ["armors"] ["boots"] [0], $teamKit ["armors"] ["boots"] [1], $teamKit ["armors"] ["boots"] [2] ) );
+			}
+			$p->getInventory ()->sendArmorContents ( $p );
+			// add iron sword, if not exist
+			$weapons = $teamKit ["weapons"];
+			foreach ( $weapons as $w ) {
+				$item = new Item ( $w [0], $w [1], $w [2] );
+				$p->getInventory ()->addItem ( $item );
+			}
+			$foods = $teamKit ["foods"];
+			foreach ( $foods as $w ) {
+				$item = new Item ( $w [0], $w [1], $w [2] );
+				$p->getInventory ()->addItem ( $item );
+			}
+			$p->getInventory ()->setHeldItemIndex ( 0 );
+			$p->getInventory ()->sendArmorContents ( $p->getInventory ()->getViewers () );
 		}
-		if ($teamKit ["armors"] ["chestplate"] [0] != null) {
-			$p->getInventory ()->setChestplate ( new Item ( $teamKit ["armors"] ["chestplate"] [0], $teamKit ["armors"] ["chestplate"] [1], $teamKit ["armors"] ["chestplate"] [2] ) );
-		}
-		if ($teamKit ["armors"] ["leggings"] [0] != null) {
-			$p->getInventory ()->setLeggings ( new Item ( $teamKit ["armors"] ["leggings"] [0], $teamKit ["armors"] ["leggings"] [1], $teamKit ["armors"] ["leggings"] [2] ) );
-		}
-		if ($teamKit ["armors"] ["boots"] [0] != null) {
-			$p->getInventory ()->setBoots ( new Item ( $teamKit ["armors"] ["boots"] [0], $teamKit ["armors"] ["boots"] [1], $teamKit ["armors"] ["boots"] [2] ) );
-		}
-		// notify viewers
-		$p->getInventory ()->sendArmorContents ( $p );
-		// set health 
-		// $MCG76 - I DISABLED FOR THIS GAME
-// 		if ($teamKit ["health"] != null && $teamKit ["health"] > 1) {
-// 			$p->setHealth ( $teamKit ["health"] );
-// 		} else {
-// 			$p->setHealth ( 20 );
-// 		}
-		// add iron sword, if not exist
-		$weapons = $teamKit ["weapons"];
-		foreach ( $weapons as $w ) {
-			$item = new Item ( $w [0], $w [1], $w [2] );
-			$p->getInventory ()->addItem ( $item );
-		}
-		$foods = $teamKit ["foods"];
-		foreach ( $foods as $w ) {
-			$item = new Item ( $w [0], $w [1], $w [2] );
-			$p->getInventory ()->addItem ( $item );
-		}
-		$p->getInventory ()->setHeldItemIndex ( 0 );		
-		$p->getInventory()->sendArmorContents($p->getInventory()->getViewers());
-		$p->updateMovement ();
 	}
 	
 	/**
 	 * Remove Game Kits and Inventory
-	 * 
-	 * @param Player $bp
+	 *
+	 * @param Player $bp        	
 	 */
 	public function removePlayerGameKit(Player $bp) {
-		$bp->getInventory ()->setBoots ( new Item ( Item::AIR) );
-		$bp->getInventory ()->setChestplate ( new Item ( Item::AIR) );
-		$bp->getInventory ()->setHelmet ( new Item ( Item::AIR) );
-		$bp->getInventory ()->setLeggings ( new Item ( Item::AIR) );
-		$bp->getInventory ()->clearAll ();
-		$bp->getInventory ()->sendContents ( $bp );
-		$bp->getInventory()->sendArmorContents($bp->getInventory()->getViewers());
-		$bp->updateMovement ();
+		if (! empty ( $bp->getInventory () )) {
+			$bp->getInventory ()->setBoots ( new Item ( Item::AIR ) );
+			$bp->getInventory ()->setChestplate ( new Item ( Item::AIR ) );
+			$bp->getInventory ()->setHelmet ( new Item ( Item::AIR ) );
+			$bp->getInventory ()->setLeggings ( new Item ( Item::AIR ) );
+			$bp->getInventory ()->clearAll ();
+			$bp->getInventory ()->sendContents ( $bp );
+			$bp->getInventory ()->sendArmorContents ( $bp->getInventory ()->getViewers () );
+		}
 	}
 }

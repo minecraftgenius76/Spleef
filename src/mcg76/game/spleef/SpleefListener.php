@@ -58,7 +58,7 @@ class SpleefListener extends MiniGameBase implements Listener {
 	 */
 	public function onBlockBreak(BlockBreakEvent $event) {
 		$b = $event->getBlock ();
-		if ($this->getPlugin ()->pos_display_flag == 1) {
+		if ($this->getPlugin ()->pos_display_flag === 1) {
 			$event->getPlayer ()->sendMessage ( "BREAKED: [x=" . $b->x . " y=" . $b->y . " z=" . $b->z . "]" );
 			return;
 		}
@@ -170,17 +170,17 @@ class SpleefListener extends MiniGameBase implements Listener {
 		$line3 = $event->getLine ( 2 );
 		$line4 = $event->getLine ( 3 );
 		
-		if ($line1 != null && $line1 == "spleef") {
-			if ($line2 != null && $line2 == "stats") {
+		if ($line1 != null && $line1 === "spleef") {
+			if ($line2 != null && $line2 === "stats") {
 				$event->setLine ( 2, "Arena Players" );
 				$event->setLine ( 3, count ( $this->getPlugin ()->arenaPlayers ) );
 				return;
 			}
-			if ($line2 != null && $line2 == "home") {
+			if ($line2 != null && $line2 === "home") {
 				$this->getController ()->teleportPlayerToHome ( $player );
 			}
 		}
-		if ($line2 != null && $line2 == "lobby") {
+		if ($line2 != null && $line2 === "lobby") {
 			$levelname = $line3;
 			$this->getController ()->teleportPlayerToLobby ( $player );
 		}

@@ -1,7 +1,7 @@
 # ---------------------------
 # SPLEEF MINI-GAME PLUGIN
 # CONFIGURATION FILE
-# Version 1.5.3
+# Version 1.6.0
 # ---------------------------
 # specify language to use
 language: "EN"
@@ -72,9 +72,9 @@ spleef_start_button_1_z: "408"
 # -------------------------------
 # STATIC SIGN GOTO LOBBY LOCATION
 # -------------------------------
-spleef_sign_lobby_x: "487"
+spleef_sign_lobby_x: "496"
 spleef_sign_lobby_y: "5"
-spleef_sign_lobby_z: "387"
+spleef_sign_lobby_z: "415"
 # ------------------------------
 # STATIC SIGN GOTO HOME LOCATION
 # ------------------------------

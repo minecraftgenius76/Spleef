@@ -81,6 +81,7 @@ class SpleefSetup extends MiniGameBase {
 		} else {
 			return new Config ( $this->getPlugin ()->getDataFolder () . self::DIR_ARENA . strtolower ( $blockType ) . ".yml", Config::YAML, array () );
 		}
+        return;
 	}
 	public function getMessageLanguage() {
 		$configlang = $this->getPlugIn ()->getConfig ()->get ( "language" );
@@ -248,12 +249,6 @@ class SpleefSetup extends MiniGameBase {
 	}
 	public function getGameWorldPos($posTypeId) {
 		switch ($posTypeId) {
-			case self::SPLEEF_ARENA_POSITION :
-				$sx = $this->getConfig ( "stadium_x" );
-				$sy = $this->getConfig ( "stadium_y" );
-				$sz = $this->getConfig ( "stadium_z" );
-				return new Position ( $sx, $sy, $sz );
-				break;
 			case self::SPLEEF_ARENA_POSITION :
 				$sx = $this->getConfig ( "stadium_x" );
 				$sy = $this->getConfig ( "stadium_y" );
@@ -674,6 +669,6 @@ class SpleefSetup extends MiniGameBase {
 		return $this->getPlugin ()->getConfig ()->get ( $key );
 	}
 	private function setConfig($key, $value) {
-		return $this->getPlugin ()->getConfig ()->set ( $key, $value );
+		$this->getPlugin ()->getConfig ()->set ( $key, $value );
 	}
 }

@@ -12,34 +12,20 @@ use pocketmine\utils\Config;
 use pocketmine\level\Position;
 use pocketmine\level\Level;
 use pocketmine\level\Explosion;
-use pocketmine\event\block\BlockEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\entity\EntityMoveEvent;
-use pocketmine\event\entity\EntityMotionEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\Listener;
 use pocketmine\math\Vector3 as Vector3;
-use pocketmine\math\Vector2 as Vector2;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerRespawnEvent;
-use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\network\protocol\AddMobPacket;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\network\protocol\UpdateBlockPacket;
 use pocketmine\block\Block;
-use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\network\protocol\DataPacket;
-use pocketmine\network\protocol\Info;
 use pocketmine\network\protocol\LoginPacket;
-use pocketmine\entity\FallingBlock;
 use pocketmine\command\defaults\TeleportCommand;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\item\Item;
+use pocketmine\level\sound\PopSound;
+use pocketmine\level\sound\ClickSound;
+use pocketmine\level\sound\DoorSound;
 
 /**
  * MCG76 Spleef Controller
@@ -258,14 +244,14 @@ class SpleefController extends MiniGameBase {
 	public function broadCastWinning() {
 		$output = "";
 		if (count ( $this->getPlugin ()->arenaPlayers ) > 0) {
-			$output .= $this->getMsg ( "plugin.name" ) . "************************|\n";
-			$output .= $this->getMsg ( "plugin.name" ) . "* " . $this->getMsg ( "spleef.game.conglatulation" ) . "*|\n";
-			$output .= $this->getMsg ( "plugin.name" ) . "************************\n";
-			$output .= $this->getMsg ( "plugin.name" ) . $this->getMsg ( "spleef.game.round-winner" ) . count ( $this->getPlugin ()->arenaPlayers ) . "\n";
+			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************|\n";
+			$output .= TextFormat::AQUA.$this->getMsg ( "plugin.name" ) . "* " . $this->getMsg ( "spleef.game.conglatulation" ) . "*|\n";
+			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************\n";
+			$output .= TextFormat::WHITE.$this->getMsg ( "plugin.name" ) . $this->getMsg ( "spleef.game.round-winner" ) . count ( $this->getPlugin ()->arenaPlayers ) . "\n";
 			foreach ( $this->getPlugin ()->arenaPlayers as $player ) {
-				$output .= $this->getMsg ( "plugin.name" ) . "> " . $player->getName () . "\n";
+				$output .= TextFormat::GOLD.$this->getMsg ( "plugin.name" ) . "> " . $player->getName () . "\n";
 			}
-			$output .= $this->getMsg ( "plugin.name" ) . "************************|\n";
+			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************|\n";
 			$this->getPlugin ()->getServer ()->broadcastMessage ( $output );
 		}
 	}
@@ -281,7 +267,7 @@ class SpleefController extends MiniGameBase {
 		$spleefworld = $this->getSetup ()->getHomeWorldName ();
 		$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
 		$this->getPlugin ()->gameMode = 0;
-		$this->getPlugin ()->alertCount == 0;
+		$this->getPlugin ()->alertCount = 0;
 	}
 	
 	/**
@@ -290,7 +276,6 @@ class SpleefController extends MiniGameBase {
 	 * @param Player $player        	
 	 */
 	public function leaveGameWorld(Player $player) {
-		// double checking, no need this
 		if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
 			unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
 		}
@@ -305,7 +290,7 @@ class SpleefController extends MiniGameBase {
 		if ($this->getSetup ()->isEnableSpanwToLobby ()) {
 			$lobbyPos = $this->getSetup ()->getLobbyPos ();
 			$player->teleport ( $lobbyPos );
-			$this->log ( TextFormat::RED . "player spawn to lobby  " . $event->getPlayer ()->getName () . " at " . $lobbyX . " " . $lobbyY . " " . $lobbyZ );
+			$this->log ( TextFormat::RED . "player spawn to lobby  " . $player->getName () . " at " . $lobbyPos->x . " " . $lobbyPos->y . " " . $lobbyPos->z );
 		}
 		$this->grantPlayerDefaultPermissions($player);
 	}
@@ -341,8 +326,11 @@ class SpleefController extends MiniGameBase {
 				$player->sendMessage ( $this->getMsg ( "configuration.contact.admin" ) );
 			} else {
 				$player->teleport ( $arenaEntracePos );
-				$player->sendMessage ( $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.welcome" ) );
-				$player->sendMessage ( $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.havefun" ) );
+				$player->getLevel()->updateAround($player->getPosition());
+				$player->getLevel()->updateAllLight($player->getPosition());
+				for ($i=0; $i<10; $i++) {
+					$player->sendTip (TextFormat::BOLD.TextFormat::GOLD. $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.welcome" )."\n".TextFormat::BOLD.TextFormat::GOLD. $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.havefun" ) );
+				}
 			}
 		}
 	}
@@ -398,7 +386,7 @@ class SpleefController extends MiniGameBase {
 	 */
 	public function teleportPlayerToLobby(Player $player) {
 		$levelname = $this->getSetup ()->getServerLobbyWorldName ();
-		$level = $this->getLevel ( $levelhome );
+		$level = $this->getLevel ( $levelname );
 		if ($player->getServer ()->isLevelLoaded ( $levelname )) {
 			$level = $player->getServer ()->getLevelByName ( $levelname );
 			if ($level == null) {
@@ -449,7 +437,7 @@ class SpleefController extends MiniGameBase {
 	/**
 	 * Retrieve Level
 	 *
-	 * @param unknown $levelhome        	
+	 * @param string $levelhome
 	 * @return void|NULL
 	 */
 	public function getLevel($levelhome) {
@@ -519,8 +507,10 @@ class SpleefController extends MiniGameBase {
 		}
 	}
 	public function startGamePlay(Player $player) {
+		$output = "";
 		// set the floor to be breakable
-		if ($this->getPlugin ()->gameMode == 0) {
+		if ($this->getPlugin ()->gameMode === 0) {
+			$player->getLevel()->addSound(new ClickSound($player->getPosition()), array($player));			
 			$arenaPos = $this->getSetup ()->getArenaPos ();
 			$arenaSize = $this->getSetup ()->getArenaSize ();
 			// build the floors
@@ -529,23 +519,24 @@ class SpleefController extends MiniGameBase {
 			// build small ring - 80 - snow
 			$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, $arenaSize, 80, "arena" );
 			// brodcast
-			$output = "";
-			$output .= $this->getMsg ( "plugin.name" ) . "-------------------------\n";
-			$output .= $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.game.started" ) . "\n";
-			$output .= $this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.game.gogogo" ) . "\n";
-			$output .= $this->getMsg ( "plugin.name" ) . "-------------------------\n";
-			$player->getServer ()->broadcastMessage ( $output );
-			// send an explosion
-			$explosion = new Explosion ( new Position ( $arenaPos->x, $arenaPos->y + 8, $arenaPos->z, $level ), 1 );
-			$explosion->explode ();
+			$output .= TextFormat::GREEN.$this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.game.started" ) . "\n";
+			$output .= TextFormat::YELLOW.$this->getMsg ( "plugin.name" ) . " " . $this->getMsg ( "spleef.game.gogogo" ) . "\n";
+			
+// 			// send an explosion
+// 			$explosion = new Explosion ( new Position ( $arenaPos->x, $arenaPos->y + 5, $arenaPos->z, $level ), 1 );
+// 			$explosion->explodeA();
+			
+			for ($i=0;$i<10;$i++) {
+				$player->getLevel()->addSound(new DoorSound($player->getPosition()), $this->plugin->arenaPlayers);	
+			}
+			$player->getServer ()->broadcastMessage ( $output, $this->plugin->arenaPlayers );
 			$this->getPlugin ()->gameMode = 1;
 			$this->getPlugin ()->alertCount = 0;
 		} else {
-			$output = $this->getMsg ( "plugin.name" ) . "-------------------------\n";
+			$player->getLevel()->addSound(new ClickSound($player->getPosition()), array($player));
 			$output .= $this->getMsg ( "plugin.name" ) . $this->getMsg ( "spleef.game.wait-for-reset" ) . "\n";
 			$output .= $this->getMsg ( "plugin.name" ) . $this->getMsg ( "spleef.game.manual-reset" ) . "\n";
-			$output .= $this->getMsg ( "plugin.name" ) . "--------------------------\n";
-			$player->sendMessage ( $output );
+			$player->sendTip( TextFormat::RED.$output );
 		}
 	}
 	
@@ -557,11 +548,12 @@ class SpleefController extends MiniGameBase {
 	public function restartGame(CommandSender $sender) {
 		$arenaPos = $this->getSetup ()->getArenaPos ();
 		$arenaSize = $this->getSetup ()->getArenaSize ();
+
 		$this->getBuilder ()->buildStadium ( $sender->getServer (), $arenaPos, $arenaSize );
 		// build big ring - 35 - wool
-		$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, ($arenaSize + 10), 35 );
+		$this->getBuilder ()->buildFloor ( $sender->getLevel(), $arenaPos->x, ($arenaPos->y + 16), $arenaPos->z, ($arenaSize + 10), 35 );
 		// build small ring - 80 - snow
-		$this->getBuilder ()->buildFloor ( $level, $arenaPos->x, ($arenaPos + 16), $arenaPos->z, $arenaSize, 80 );
+		$this->getBuilder ()->buildFloor ( $sender->getLevel(), $arenaPos->x, ($arenaPos + 16), $arenaPos->z, $arenaSize, 80 );
 		// reset
 		$this->getPlugin ()->gameMode = 1;
 		$this->getPlugin ()->alertCount = 0;

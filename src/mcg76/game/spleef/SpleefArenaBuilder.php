@@ -2,39 +2,20 @@
 
 namespace mcg76\game\spleef;
 
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\level\Position;
 use pocketmine\level\Level;
-use pocketmine\utils\Cache;
 use pocketmine\level\Explosion;
-use pocketmine\event\block\BlockEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\entity\EntityMoveEvent;
-use pocketmine\event\entity\EntityMotionEvent;
-use pocketmine\event\Listener;
 use pocketmine\math\Vector3 as Vector3;
 use pocketmine\math\Vector2 as Vector2;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerRespawnEvent;
-use pocketmine\event\player\PlayerLoginEvent;
-use pocketmine\network\protocol\AddMobPacket;
-use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\network\protocol\UpdateBlockPacket;
 use pocketmine\block\Block;
-use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\network\protocol\DataPacket;
 use pocketmine\network\protocol\Info;
 use pocketmine\network\protocol\LoginPacket;
-use pocketmine\entity\FallingBlock;
 use pocketmine\nbt\NBT;
 use pocketmine\item\ItemBlock;
 use pocketmine\block\SignPost;
@@ -57,8 +38,8 @@ class SpleefArenaBuilder extends MiniGameBase {
 	
 	/**
 	 * constructor
-	 * 
-	 * @param SpleefPlugin $plugin
+	 *
+	 * @param SpleefPlugin $plugin        	
 	 */
 	public function __construct(SpleefPlugin $plugin) {
 		parent::__construct ( $plugin );
@@ -149,6 +130,35 @@ class SpleefArenaBuilder extends MiniGameBase {
 		return $arenaInfo;
 	}
 	
+	public function setFloor(Position $p1,Position $p2, $block, &$output = null) {
+		$send = false;
+		$level = $p1->getLevel();
+		$bcnt = 1;
+		$startX = min ($p1->x, $p2->x);
+		$endX = max ($p1->x, $p2->x);
+		$startY = min ($p1->y, $p2->y );
+		$endY = max ( $p1->y, $p2->y );
+		$startZ = min ( $p1->z, $p2->z  );
+		$endZ = max ( $p1->z, $p2->z);
+		$count = 0; 
+		for($x = $startX; $x <= $endX; ++ $x) {
+			for($y = $startY; $y <= $endY; ++ $y) {
+				for($z = $startZ; $z <= $endZ; ++ $z) {
+					$level->setBlock ( new Position ( $x, $y, $z ), $block, false, true );
+					$count ++;
+					for($i = 1; $i < 5; $i ++) {
+						$v = round ( $x ) . "," . round ( $y + $i ) . "," . round ( $z );
+						if (! isset ( $this->getPlugin ()->arenablocks [$v] )) {
+							$this->getPlugin ()->arenablocks [$v] = $v;
+						}
+					}
+				}
+			}
+		}
+		$output .= "$count block(s) have been updated.\n";
+		return true;
+	}
+	
 	/**
 	 * Build Floor
 	 *
@@ -162,10 +172,10 @@ class SpleefArenaBuilder extends MiniGameBase {
 	 * build board layer
 	 *
 	 * @param Player $p        	
-	 * @param unknown $px        	
-	 * @param unknown $py        	
-	 * @param unknown $pz        	
-	 * @param unknown $btype        	
+	 * @param string $px
+	 * @param string $py
+	 * @param string $pz
+	 * @param string $btype
 	 * @return multitype:\pocketmine\block\Block
 	 */
 	public function buildBoardLayer(Level $level, $px, $py, $pz, $btype, $bsize, $floorType) {
@@ -182,9 +192,11 @@ class SpleefArenaBuilder extends MiniGameBase {
 				$rb = $level->getBlock ( new Vector3 ( $x, $y, $z ) );
 				$this->replaceBlockType ( $level, $rb, $btype );
 				if ($floorType == self::BUILDING_FLOOR_INSIDE) {
-					$v = round ( $x ) . "," . round ( $y + 1 ) . "," . round ( $z );
-					if (! isset ( $this->getPlugin()->arenablocks [$v] )) {
-						$this->getPlugin ()->arenablocks [$v] = $v;
+					for($i = 1; $i < 5; $i ++) {
+						$v = round ( $x ) . "," . round ( $y + $i ) . "," . round ( $z );
+						if (! isset ( $this->getPlugin ()->arenablocks [$v] )) {
+							$this->getPlugin ()->arenablocks [$v] = $v;
+						}
 					}
 				}
 				$z ++;
@@ -210,12 +222,12 @@ class SpleefArenaBuilder extends MiniGameBase {
 	 * Render Water Tank
 	 *
 	 * @param Player $player        	
-	 * @param unknown $radius        	
-	 * @param unknown $height        	
-	 * @param unknown $dataX        	
-	 * @param unknown $dataY        	
-	 * @param unknown $dataZ        	
-	 * @param unknown $wallType        	
+	 * @param string $radius
+	 * @param string $height
+	 * @param string $dataX
+	 * @param string $dataY
+	 * @param string $dataZ
+	 * @param string $wallType
 	 * @return boolean
 	 */
 	public function buildWaterTank(Level $level, $radius, $height, $dataX, $dataY, $dataZ, $blockType) {
@@ -228,7 +240,7 @@ class SpleefArenaBuilder extends MiniGameBase {
 					$z = $dataZ;
 					for($rz = 0; $rz < $radius; $rz ++) {
 						$rb = $level->getBlock ( new Vector3 ( $x, $y, $z ) );
-						switch ($this->getPlugin()->gameType) {
+						switch ($this->getPlugin ()->gameType) {
 							case 1 :
 								$this->replaceBlockType ( $level, $rb, 51 );
 								break;
@@ -409,24 +421,24 @@ class SpleefArenaBuilder extends MiniGameBase {
 	public function removeBlocks(Block $block, Player $xp) {
 		$this->updateBlock ( $block, $xp, 0 );
 	}
-	public function removeUpdateBlock($topblock, $tntblock) {
-		foreach ( $this->getPlugin ()->livePlayers as $livep ) {
-			if ($livep instanceof MGArenaPlayer) {
-				$this->removeBlocks ( $topblock, $livep->player );
-				$this->removeBlocks ( $tntblock, $livep->player );
-			} else {
-				$this->removeBlocks ( $topblock, $livep );
-				$this->removeBlocks ( $tntblock, $livep );
-			}
-		}
-	}
+//	public function removeUpdateBlock($topblock, $tntblock) {
+//		foreach ( $this->getPlugin ()->livePlayers as $livep ) {
+//			if ($livep instanceof MGArenaPlayer) {
+//				$this->removeBlocks ( $topblock, $livep->player );
+//				$this->removeBlocks ( $tntblock, $livep->player );
+//			} else {
+//				$this->removeBlocks ( $topblock, $livep );
+//				$this->removeBlocks ( $tntblock, $livep );
+//			}
+//		}
+//	}
 	
 	/**
 	 * Update block
 	 *
 	 * @param Block $block        	
 	 * @param Player $xp        	
-	 * @param unknown $blockType        	
+	 * @param string $blockType
 	 */
 	public function updateBlock(Block $block, Player $xp, $blockType) {
 		$players = $xp->getLevel ()->getPlayers ();
@@ -464,7 +476,7 @@ class SpleefArenaBuilder extends MiniGameBase {
 	 *
 	 * @param Block $block        	
 	 * @param Player $p        	
-	 * @param unknown $blockType        	
+	 * @param string $blockType
 	 */
 	public function renderBlockByType(Block $block, Player $p, $blockType) {
 		$this->updateBlock ( $block, $p, $blockType );
@@ -490,7 +502,7 @@ class SpleefArenaBuilder extends MiniGameBase {
 	 */
 	public function replaceBlockType(Level $level, Block $block, $blockType) {
 		// randomly place a mine
-		$players = $level->getPlayers ();
+		$players = $level-> getPlayers();
 		foreach ( $players as $p ) {
 			$pk = new UpdateBlockPacket ();
 			$pk->x = $block->getX ();
@@ -499,13 +511,11 @@ class SpleefArenaBuilder extends MiniGameBase {
 			$pk->block = $blockType;
 			$pk->meta = 0;
 			$p->dataPacket ( $pk );
-			$p->getLevel ()->setBlockIdAt ( $block->getX (), $block->getY (), $block->getZ (), $pk->block );
+			$p->getLevel ()->setBlockIdAt ( $block->getX (), $block->getY (), $block->getZ (), $pk->block );			
 			
-			$pos = new Position ( $block->x, $block->y, $block->z );
+			$pos = new Position ( $block->x, $block->y, $block->z, $level);
 			$block = $p->getLevel ()->getBlock ( $pos );
-			$direct = true;
-			$update = true;
-			$p->getLevel ()->setBlock ( $pos, $block, $direct, $update );
+			$p->getLevel ()->setBlock ( $pos, $block, false, true );
 		}
 	}
 	
