@@ -251,8 +251,12 @@ class SpleefController extends MiniGameBase {
 			foreach ( $this->getPlugin ()->arenaPlayers as $player ) {
 				$output .= TextFormat::GOLD.$this->getMsg ( "plugin.name" ) . "> " . $player->getName () . "\n";
 			}
-			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************|\n";
-			$this->getPlugin ()->getServer ()->broadcastMessage ( $output );
+			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************|\n";			
+			$spleefGameWorld = $this->getSetup()->getHomeWorldName ();
+			$level = $this->plugin->controller->getLevel ( $spleefGameWorld );		
+			if ($level instanceof Level) {	
+				$this->getPlugin ()->getServer ()->broadcastMessage ( $output , $level->getPlayers());
+			}
 		}
 	}
 	
