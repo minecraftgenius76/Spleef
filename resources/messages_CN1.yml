@@ -15,53 +15,54 @@ spleef:
  welcome: "欢迎Speef竞技场"
  havefun: "玩得开心!"
  setup:
-   action: "Setup Mode Action: " 
-   select: "[Select a Block to SET that location]" 
-   success: "setup success!"
-   failed: "setup failed!"
+   action: "设置模式开启: " 
+   select: "[请选择一个方块来设定区域" 
+   success: "设置成功!"
+   failed: "设置失败!"
  command:
   create: 
-    success: "Spleef Arena Created!"
+    success: "掘一死战创建成功!"
   reset: 
-    success: "Spleef Arena Reseted!"   
+
+    success: "掘一死战重置成功!"   
   blockon: 
-    success: "Block Display ON!"       
+    success: "方块显示[开启]!"       
   blockoff: 
-    success: "Block Display OFF!"          
+    success: "方块显示[关闭]!"          
   error:
-   no-authorization: "You are not authorized to use this command!"
-   in-game-only: "This command is in-game-only."
+   no-authorization: "你没有权限使用这个指令！"
+   in-game-only: "请在游戏中执行该指令"
  hits:
-   toplay: "Hit Start button to play"
+   toplay: "请触摸开始按钮开始游戏"
  game:
-   started: "Game Started!" 
-   stats: "Spleef Arena Stats"
-   players: "Players :"   
-   reset-in: "Reset In "
-   gogogo: "Go, Go, Go!!!!" 
+   started: "游戏开始!" 
+   stats: "掘一死战状态"
+   players: "玩家:"   
+   reset-in: "游戏已重置"
+   gogogo: "冲，冲，冲!!!!" 
    conglatulation: "CONGLATULATION"
-   round-winner: "This Round Winner(s):"
-   wait-for-reset: "game round still on. Please wait."
-   manual-reset: "or manual reset using admin command"
+   round-winner: "本回合获胜者:"
+   wait-for-reset: "游戏进行中，请等待…"
+   manual-reset: "或者腐竹使用指令来重载游戏"
 teleporting:
  lobby:
-  world: "teleporting to lobby world"
-  location: "teleporting to lobby location"  
+  world: "传送回主城中…"
+  location: "返回主城出生点"  
  spleef:
-  location: "teleport to SPEEF home world" 
+  location: "传送到[掘一死战]世界" 
 configuration:
  error: 
   missing:
-    arena-entrace: "Missing Spleef Arena Entrance Configuration info!"
-    level-not-found: "level not found: "    
-  level-not-generated: "Error has NOT generated yet!"
+    arena-entrace: "找不到掘一死战入口设置!"
+    level-not-found: "找不到地图: "    
+  level-not-generated: "世界未加载!"
  contact:
-   admin: "Please report to administrator."
+   admin: "请联系腐竹."
 plugin:
- name: "[SPLEEF]"
- enable: "Spleef Mini-Game - ENABLED"
- disable: "Spleef Mini-Game - DISABLED "
+ name: "[掘一死战]"
+ enable: "掘一死战-开放中"
+ disable: "掘一死战-关闭中"
  schedule:
-  reset: "Reset schedule task to run every "
-  time: " seconds "
+  reset: "游戏重载计划被设定为每"
+  time: " 秒 "
 
