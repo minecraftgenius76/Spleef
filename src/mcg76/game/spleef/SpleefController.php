@@ -349,7 +349,14 @@ class SpleefController extends MiniGameBase {
 		$arenaSize = $this->getSetup ()->getArenaSize ();
 		// re-build arena
 		$spleefworld = $this->getSetup ()->getHomeWorldName ();
-		$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
+		$resetOption = $this->getSetup ()->getRoundResetOption ();
+		
+		if ($resetOption != null && $resetOption == "FULL") {
+			$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
+		} else {
+			$this->getBuilder ()->buildStadiumFloorOnly ( $spleefworld, $arenaPos, $arenaSize );
+		}
+
 		// reset
 		$this->getPlugin ()->gameMode = 0;
 		$this->getPlugin ()->alertCount = 0;
