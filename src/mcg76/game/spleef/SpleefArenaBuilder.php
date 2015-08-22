@@ -517,6 +517,7 @@ class SpleefArenaBuilder extends MiniGameBase {
 			$block = $p->getLevel ()->getBlock ( $pos );
 			$p->getLevel ()->setBlock ( $pos, $block, false, true );
 		}
+		$level->setBlock(new Vector3($block->getX (), $block->getY (), $block->getZ ()), new Block($blockType), false, false);
 	}
 	
 	/**
