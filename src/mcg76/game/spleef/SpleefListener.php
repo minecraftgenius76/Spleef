@@ -70,6 +70,11 @@ class SpleefListener extends MiniGameBase implements Listener {
 						$event->setCancelled ( true );
 					}
 				}
+				$block = $event->getBlock();
+				$v = $b->x . "," . ( $b->y + 1 ) . "," . $b->z;
+				if ($b->getId () == 80 && isset ( $this->getPlugin ()->arenablocks [$v] )) {	
+					$event->setInstaBreak(true);
+				}
 			}
 		}
 	}
