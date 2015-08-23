@@ -494,6 +494,7 @@ class SpleefController extends MiniGameBase {
 		} else {
 			if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
 				$this->removePlayerGameKit ( $player );
+				unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
 				if(count ( $this->getPlugin ()->arenaPlayers ) < 2 && $this->getPlugin ()->gameMode == 1) {
 					$arenaPos = $this->getSetup ()->getArenaPos ();
 					$arenaSize = $this->getSetup ()->getArenaSize ();
@@ -510,16 +511,21 @@ class SpleefController extends MiniGameBase {
 					// reset
 					$this->getPlugin ()->gameMode = 0;
 					$this->getPlugin ()->alertCount = 0;
-					
+
 					// announce winners
 					if(count ( $this->getPlugin ()->arenaPlayers ) == 1) {
 						$this->broadCastWinning ();
 					} else {
 						$this->log ( "Spleef round ended with no players somehow..." );
 					}
+					
+					// move players out of arena
+					foreach ( $this->getPlugin ()->arenaPlayers as $arenaplayer ) {
+						$this->teleportPlayerToLobby($arenaplayer);
+					}
 				}
 				
-				unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
+				
 				
 				$this->log ( "Player departed, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
 			}
@@ -557,7 +563,7 @@ class SpleefController extends MiniGameBase {
 		if ((round ( $blockTouched->x ) == round ( $startButtonPos->x ) && round ( $blockTouched->y ) == round ( $startButtonPos->y ) && round ( $blockTouched->z ) == round ( $startButtonPos->z )) || (round ( $blockTouched->x ) == round ( $startSignPos->x ) && round ( $blockTouched->y ) == round ( $startSignPos->y ) && round ( $blockTouched->z ) == round ( $startSignPos->z ))) {
 			if(count ( $this->getPlugin ()->arenaPlayers ) < 2) {
 				$player->sendMessage ( $this->getMsg ( "spleef.game.only-one-player" ) );
-				// return;
+				return;
 			}
 			$playerlist = array();
 			foreach ( $this->getPlugin ()->arenaPlayers as $arenaplayer ) {
