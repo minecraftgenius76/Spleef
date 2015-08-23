@@ -495,6 +495,7 @@ class SpleefController extends MiniGameBase {
 			if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
 				$this->removePlayerGameKit ( $player );
 				unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
+				$this->teleportPlayerToHome($player);
 				if(count ( $this->getPlugin ()->arenaPlayers ) < 2 && $this->getPlugin ()->gameMode == 1) {
 					$arenaPos = $this->getSetup ()->getArenaPos ();
 					$arenaSize = $this->getSetup ()->getArenaSize ();
@@ -519,15 +520,15 @@ class SpleefController extends MiniGameBase {
 						$this->log ( "Spleef round ended with no players somehow..." );
 					}
 					
-					// move players out of arena
+					// move remaining players out of arena
 					foreach ( $this->getPlugin ()->arenaPlayers as $arenaplayer ) {
-						$this->teleportPlayerToLobby($arenaplayer);
+						$this->teleportPlayerToHome($arenaplayer);
 					}
 				}
 				
 				
 				
-				$this->log ( "Player departed, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
+				//$this->log ( "Player departed, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
 			}
 		}
 	}
