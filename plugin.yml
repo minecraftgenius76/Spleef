@@ -1,9 +1,9 @@
-name: mcg76_Spleef
-version: 1.6.0
+name: mwvent_Spleef
+version: 1.7.0
 api: 1.12.0
 main: mcg76\game\spleef\SpleefPlugIn
 author: minecraftgenius76
-description: minecraftgenius76 Minigame Spleef 
+description: minecraftgenius76(mwvent customised) Minigame Spleef 
 commands:
  spleef:
   description: "Start minecraftgenius76 Minigame Spleef"
