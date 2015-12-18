@@ -452,8 +452,6 @@ class SpleefController extends MiniGameBase {
 			$message = $message = $this->getMsg ( "teleporting.spleef.location" ) . "-" . $levelhome;
 			$player->sendMessage ( $message );
 			$player->teleport ( $homePos );
-			// disable getting kicked for flying I hope
-			$player->resetFallDistance();
 		}
 	}
 	
