@@ -473,6 +473,20 @@ class SpleefController extends MiniGameBase {
 		return Server::getInstance ()->getLevelByName ( $levelhome );
 	}
 	
+        /**
+         * 
+         * @param Player $player
+         * @return boolean
+         */
+        public function isPlayerPlaying(Player $player) {
+            $gameInProgress = ($this->getPlugin ()->gameMode == 1);
+            if(!$gameInProgress) {
+                return false;
+            }
+            $playerInArena = (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] ));
+            return $playerInArena;
+        }
+        
 	/**
 	 * Keep track of players inside arena
 	 *

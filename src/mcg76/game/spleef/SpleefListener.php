@@ -17,6 +17,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityMotionEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\math\Vector3 as Vector3;
 use pocketmine\math\Vector2 as Vector2;
@@ -125,6 +126,36 @@ class SpleefListener extends MiniGameBase implements Listener {
 		}
 	}
 	
+        /**
+         * EntityDamageEvent
+         * @param EntityDamageEvent $event
+         * @return type
+         */
+        public function onPvP(EntityDamageEvent $event) {
+            if( ! $event instanceof EntityDamageByEntityEvent ) {
+                return;
+            }
+            
+            $spleefworld = strtolower($this->getSetup ()->getHomeWorldName ());
+            $player = $event->getEntity();
+            $eventworld = strtolower($player->getPosition()->getLevel()->getName());
+            
+            if($spleefworld != $eventworld) {
+                return;
+            }
+            
+            if( ! $this->getController ()->isPlayerPlaying($player) ) {
+                $event->setCancelled();
+            } else {
+                if(! $event->getDamager() instanceof Player) {
+                    return;
+                } else {
+                    $msg = "You can only PvP in spleef.";
+                    $event->getDamager()->sendMessage($msg);
+                }
+            }
+        }
+        
 	/**
 	 * PlayerMoveEvent
 	 *
