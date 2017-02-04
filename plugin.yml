@@ -1,6 +1,13 @@
 name: mwvent_Spleef
 version: 1.7.0
-api: 2.0.0
+api:
+api:
+- 1.12.0
+- 2.0.0
+- 3.0.0
+- 3.0.0-ALPHA1
+- 3.0.0-ALPHA2
+- 3.0.0-ALPHA3
 main: mcg76\game\spleef\SpleefPlugIn
 author: minecraftgenius76
 description: minecraftgenius76(mwvent customised) Minigame Spleef 
