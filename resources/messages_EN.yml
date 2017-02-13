@@ -43,6 +43,8 @@ spleef:
    round-winner: "This Round Winner(s):"
    wait-for-reset: "game round still on. Please wait."
    manual-reset: "or manual reset using admin command"
+   game-already-in-progress: "There is already a game in progress"
+   only-one-player: "There is only one player in the arena"
 teleporting:
  lobby:
   world: "teleporting to lobby world"

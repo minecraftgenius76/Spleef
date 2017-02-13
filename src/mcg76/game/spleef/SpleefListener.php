@@ -17,6 +17,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityMotionEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\math\Vector3 as Vector3;
 use pocketmine\math\Vector2 as Vector2;
@@ -27,6 +28,7 @@ use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\network\protocol\UpdateBlockPacket;
@@ -69,6 +71,11 @@ class SpleefListener extends MiniGameBase implements Listener {
 					if ($b->getId () != 80) {
 						$event->setCancelled ( true );
 					}
+				}
+				$block = $event->getBlock();
+				$v = $b->x . "," . ( $b->y + 1 ) . "," . $b->z;
+				if ($b->getId () == 80 && isset ( $this->getPlugin ()->arenablocks [$v] )) {	
+					$event->setInstaBreak(true);
 				}
 			}
 		}
@@ -119,6 +126,36 @@ class SpleefListener extends MiniGameBase implements Listener {
 		}
 	}
 	
+        /**
+         * EntityDamageEvent
+         * @param EntityDamageEvent $event
+         * @return type
+         */
+        public function onPvP(EntityDamageEvent $event) {
+            if( ! $event instanceof EntityDamageByEntityEvent ) {
+                return;
+            }
+            
+            $spleefworld = strtolower($this->getSetup ()->getHomeWorldName ());
+            $player = $event->getEntity();
+            $eventworld = strtolower($player->getPosition()->getLevel()->getName());
+            
+            if($spleefworld != $eventworld) {
+                return;
+            }
+            
+            if( ! $this->getController ()->isPlayerPlaying($player) ) {
+                $event->setCancelled();
+            } else {
+                if(! $event->getDamager() instanceof Player) {
+                    return;
+                } else {
+                    $msg = "You can only PvP in spleef.";
+                    $event->getDamager()->sendMessage($msg);
+                }
+            }
+        }
+        
 	/**
 	 * PlayerMoveEvent
 	 *
@@ -126,9 +163,56 @@ class SpleefListener extends MiniGameBase implements Listener {
 	 */
 	public function onPlayerMove(PlayerMoveEvent $event) {
 		$player = $event->getPlayer ();
-		if ($player instanceof Player) {
+		$spleefworld = $this->getSetup ()->getHomeWorldName ();
+		
+		if( !is_null($event->getTo()->getLevel()) ) {
+			$toworld = $event->getTo()->getLevel()->getName();
+		} else {
+			// if getto world has not been supplied (null) it is safe to assume player world is the dest?
+			if(!is_null($player->getLevel())) {
+				$toworld = $player->getLevel()->getName();
+			} else {
+				// not sure if there is a possibilty we could catch an offline player with this event causing null?
+				$toworld = "";
+			}
+		}
+		
+		if ($player instanceof Player && $toworld == $spleefworld) {
 			$v = round ( $event->getTo ()->x ) . "," . round ( $event->getTo ()->y ) . "," . round ( $event->getTo ()->z );
 			$this->getController ()->trackArenaPlayers ( $player, $v );
+		} else {
+			// shouldnt be needed in any scenario?
+			//$this->getController ()->trackArenaPlayers ( $player, "0" );
+		}
+	}
+	
+	/**
+	 * PlayerTeleportEvent
+	 *
+	 * @param EntityTeleportEvent $event        	
+	 */
+	public function onPlayerTeleport(EntityTeleportEvent $event) {
+		$player = $event->getEntity();
+		if (!($player instanceof Player)) return;
+
+		if( !is_null($event->getTo()->getLevel()) ) {
+			$toworld = $event->getTo()->getLevel()->getName();
+		} else {
+			// if getto world has not been supplied (null) it is safe to assume player world is the dest?
+			if(!is_null($player->getLevel())) {
+				$toworld = $player->getLevel()->getName();
+			} else {
+				// not sure if there is a possibilty we could catch an offline player with this event causing null?
+				$toworld = "";
+			}
+		}
+		$spleefworld = $this->getSetup ()->getHomeWorldName ();
+
+		if($toworld == $spleefworld) {
+			$v = round ( $event->getTo ()->x ) . "," . round ( $event->getTo ()->y ) . "," . round ( $event->getTo ()->z );
+			$this->getController ()->trackArenaPlayers ( $player, $v );
+		} else {
+			$this->getController ()->trackArenaPlayers ( $player, "0" );
 		}
 	}
 	

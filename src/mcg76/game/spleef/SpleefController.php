@@ -248,14 +248,17 @@ class SpleefController extends MiniGameBase {
 			$output .= TextFormat::AQUA.$this->getMsg ( "plugin.name" ) . "* " . $this->getMsg ( "spleef.game.conglatulation" ) . "*|\n";
 			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************\n";
 			$output .= TextFormat::WHITE.$this->getMsg ( "plugin.name" ) . $this->getMsg ( "spleef.game.round-winner" ) . count ( $this->getPlugin ()->arenaPlayers ) . "\n";
+			$winningplayerlist = array();
 			foreach ( $this->getPlugin ()->arenaPlayers as $player ) {
 				$output .= TextFormat::GOLD.$this->getMsg ( "plugin.name" ) . "> " . $player->getName () . "\n";
+				$winningplayerlist[] = $player->getName (); 
 			}
 			$output .= TextFormat::GRAY.$this->getMsg ( "plugin.name" ) . "************************|\n";			
 			$spleefGameWorld = $this->getSetup()->getHomeWorldName ();
 			$level = $this->plugin->controller->getLevel ( $spleefGameWorld );		
 			if ($level instanceof Level) {	
 				$this->getPlugin ()->getServer ()->broadcastMessage ( $output , $level->getPlayers());
+				$this->log ( "Spleef round finished with winners " . implode(",", $winningplayerlist) );
 			}
 		}
 	}
@@ -280,9 +283,11 @@ class SpleefController extends MiniGameBase {
 	 * @param Player $player        	
 	 */
 	public function leaveGameWorld(Player $player) {
-		if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
-			unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
-		}
+		$this->trackArenaPlayers($player, "0");
+		//if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
+			
+			//unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
+		//}
 	}
 	
 	/**
@@ -323,7 +328,12 @@ class SpleefController extends MiniGameBase {
 		$joinButtonPos = $this->getSetup ()->getButtonPos ( SpleefSetup::CLICK_BUTTON_JOIN1_GAME );
 		// JOIN SIGN
 		$joinSignPos = $this->getSetup ()->getSignPos ( SpleefSetup::CLICK_SIGN_JOIN1_GAME );
+		
 		if ((round ( $blockTouched->x ) == round ( $joinButtonPos->x ) && round ( $blockTouched->y ) == round ( $joinButtonPos->y ) && round ( $blockTouched->z ) == round ( $joinButtonPos->z )) || (round ( $blockTouched->x ) == round ( $joinSignPos->x ) && round ( $blockTouched->y ) == round ( $joinSignPos->y ) && round ( $blockTouched->z ) == round ( $joinSignPos->z ))) {
+			if($this->getPlugin ()->gameMode == 1) {
+				$player->sendMessage ( $this->getMsg ( "spleef.game.game-already-in-progress" ) );
+				return;
+			}
 			$arenaEntracePos = $this->getSetup ()->getArenaEntrancePos ();
 			if ($arenaEntracePos == null) {
 				$player->sendMessage ( $this->getMsg ( "configuration.error.missing.arena-entrace" ) );
@@ -349,7 +359,14 @@ class SpleefController extends MiniGameBase {
 		$arenaSize = $this->getSetup ()->getArenaSize ();
 		// re-build arena
 		$spleefworld = $this->getSetup ()->getHomeWorldName ();
-		$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
+		$resetOption = $this->getSetup ()->getRoundResetOption ();
+		
+		if ($resetOption != null && $resetOption == "FULL") {
+			$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
+		} else {
+			$this->getBuilder ()->buildStadiumFloorOnly ( $spleefworld, $arenaPos, $arenaSize );
+		}
+
 		// reset
 		$this->getPlugin ()->gameMode = 0;
 		$this->getPlugin ()->alertCount = 0;
@@ -456,6 +473,20 @@ class SpleefController extends MiniGameBase {
 		return Server::getInstance ()->getLevelByName ( $levelhome );
 	}
 	
+        /**
+         * 
+         * @param Player $player
+         * @return boolean
+         */
+        public function isPlayerPlaying(Player $player) {
+            $gameInProgress = ($this->getPlugin ()->gameMode == 1);
+            if(!$gameInProgress) {
+                return false;
+            }
+            $playerInArena = (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] ));
+            return $playerInArena;
+        }
+        
 	/**
 	 * Keep track of players inside arena
 	 *
@@ -464,15 +495,54 @@ class SpleefController extends MiniGameBase {
 	public function trackArenaPlayers(Player $player, $v) {
 		if (isset ( $this->getPlugin ()->arenablocks [$v] )) {
 			if (! isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
+				// if game is on make player leave
+				if($this->getPlugin ()->gameMode == 1) {
+					$player->sendMessage ( $this->getMsg ( "spleef.game.game-already-in-progress" ) );
+					$this->teleportPlayerToHome($player);
+					return;
+				}
 				$this->getPlugin ()->arenaPlayers [$player->getName ()] = $player;
 				// $this->log ( "Player arrived, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
 				$this->givePlayerGameKit ( $player );
 			}
 		} else {
 			if (isset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] )) {
-				unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
-				// $this->log ( "Player departed, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
 				$this->removePlayerGameKit ( $player );
+				unset ( $this->getPlugin ()->arenaPlayers [$player->getName ()] );
+				$this->teleportPlayerToHome($player);
+				if(count ( $this->getPlugin ()->arenaPlayers ) < 2 && $this->getPlugin ()->gameMode == 1) {
+					$arenaPos = $this->getSetup ()->getArenaPos ();
+					$arenaSize = $this->getSetup ()->getArenaSize ();
+					// re-build arena
+					$spleefworld = $this->getSetup ()->getHomeWorldName ();
+					$resetOption = $this->getSetup ()->getRoundResetOption ();
+					
+					if ($resetOption != null && $resetOption == "FULL") {
+						$this->getBuilder ()->buildStadium ( $spleefworld, $arenaPos, $arenaSize );
+					} else {
+						$this->getBuilder ()->buildStadiumFloorOnly ( $spleefworld, $arenaPos, $arenaSize );
+					}
+
+					// reset
+					$this->getPlugin ()->gameMode = 0;
+					$this->getPlugin ()->alertCount = 0;
+
+					// announce winners
+					if(count ( $this->getPlugin ()->arenaPlayers ) == 1) {
+						$this->broadCastWinning ();
+					} else {
+						$this->log ( "Spleef round ended with no players somehow..." );
+					}
+					
+					// move remaining players out of arena
+					foreach ( $this->getPlugin ()->arenaPlayers as $arenaplayer ) {
+						$this->teleportPlayerToHome($arenaplayer);
+					}
+				}
+				
+				
+				
+				//$this->log ( "Player departed, Spleef arena players count:" . count ( $this->getPlugin ()->arenaPlayers ) );
 			}
 		}
 	}
@@ -506,6 +576,15 @@ class SpleefController extends MiniGameBase {
 		$startSignPos = $this->getSetup ()->getSignPos ( SpleefSetup::CLICK_SIGN_START_GAME );
 		// START BUTTON
 		if ((round ( $blockTouched->x ) == round ( $startButtonPos->x ) && round ( $blockTouched->y ) == round ( $startButtonPos->y ) && round ( $blockTouched->z ) == round ( $startButtonPos->z )) || (round ( $blockTouched->x ) == round ( $startSignPos->x ) && round ( $blockTouched->y ) == round ( $startSignPos->y ) && round ( $blockTouched->z ) == round ( $startSignPos->z ))) {
+			if(count ( $this->getPlugin ()->arenaPlayers ) < 2) {
+				$player->sendMessage ( $this->getMsg ( "spleef.game.only-one-player" ) );
+				return;
+			}
+			$playerlist = array();
+			foreach ( $this->getPlugin ()->arenaPlayers as $arenaplayer ) {
+				$playerlist[] = $arenaplayer->getName (); 
+			}
+			$this->log ( "Spleef round started with players " . implode(",", $playerlist) );
 			// set the floor to be breakable
 			$this->startGamePlay ( $player );
 		}

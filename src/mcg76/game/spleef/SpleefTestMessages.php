@@ -23,6 +23,7 @@ class SpleefTestMessages extends MiniGameBase {
 	}
 	
 	public function runTests() {
+		return;
 		$this->testMessage("spleef.name");
 		$this->testMessage("spleef.welcome");		
 		$this->testMessage("spleef.havefun");
